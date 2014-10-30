@@ -7,7 +7,11 @@
         <script type="text/javascript" src="scripts/jquery.ppnotify.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                $('.notification-container').ppNotify();
+                var ppNotify = $('.notification-container').ppNotify({
+                  position: 'top'
+                });
+                
+                ppNotify.success('Some error!');
             });
         </script>
     </head>

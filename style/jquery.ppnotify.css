@@ -5,11 +5,18 @@ body {
 }
 
 .ppNotify {
+  font-family: arial, tahoma;
+  font-size: 16px;
   display: block;
   width: 100%;
   color: #FFFFFF;
-  font-size: 16px;
   *zoom: 1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  overflow: hidden;
+  display: none;
 }
 
 .ppNotify:before,
@@ -32,4 +39,30 @@ body {
 
 .ppNotify.success {
   background-color: green;
+}
+
+.ppNotify > .wrapper {
+  display: inline-block;
+  margin: auto;
+  max-width: 1200px;
+  width: 100%;
+  text-align: left;
+  height: 60px;
+}
+
+.ppNotify > .wrapper > .message {
+  display: inline-block;
+  padding: 20px;
+  float: left;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ppNotify > .wrapper > .close-button {
+  display: inline-block;
+  width: 35px;
+  height: 100%;
+  padding: 20px 0 20px 0;
+  float: right;
+  cursor: pointer;
 }
