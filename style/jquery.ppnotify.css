@@ -5,18 +5,15 @@ body {
 }
 
 .ppNotify {
-  font-family: arial, tahoma;
+  font-family:inherit;
   font-size: 16px;
-  display: block;
-  width: 100%;
   color: #FFFFFF;
   *zoom: 1;
   position: fixed;
   left: 0;
-  right: 0;
   text-align: center;
-  overflow: hidden;
   display: none;
+  width: 100%;
 }
 
 .ppNotify:before,
@@ -54,8 +51,6 @@ body {
   display: inline-block;
   padding: 20px;
   float: left;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .ppNotify > .wrapper > .close-button {

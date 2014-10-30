@@ -8,14 +8,58 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 var ppNotify = $('.notification-container').ppNotify({
-                  position: 'top'
+                  autoHide: true,
+                  duration: 5, //seconds
+                  position: 'top', //top or bottom
+                  log: true,
+                  opacity: 0.4,
+                  errorStyle: {
+                    color: '#FFFFFF',
+                    backgroundColor: 'red'
+                  },
+                  warningStyle: {
+                    color: '#FFFFFF',
+                    backgroundColor: 'orange'
+                  },
+                  successStyle: {
+                    color: '#FFFFFF',
+                    backgroundColor: 'green'
+                  },
+                  animation: {
+                    type: 'scroll', //fade, scroll, slide or none (or empty)
+                    showSpeed: 300,
+                    hideSpeed: 500
+                  },
+                  onClose: function() {},
+                  onShow: function() {}
+                });
+
+                $('.success').on('click', function(){
+                  ppNotify.success('Great success!!!');
                 });
                 
-                ppNotify.success('Some error!');
+                $('.warning').on('click', function(){
+                  ppNotify.warning('Somthing ratteling!');
+                });
+                
+                $('.error').on('click', function(){
+                  ppNotify.error('Stop right now!');
+                });
             });
         </script>
     </head>
     <body>
         <div class="notification-container"></div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <button class="success">Show success</button>
+        <br />
+        <button class="warning">Show warning</button>
+        <br />
+        <button class="error">Show error</button>
     </body>
 </html>

@@ -7,11 +7,13 @@
     var topCss = {top:0, bottom:''};
     var bottomCss = {bottom:0, top:''};
     var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
-    var timeout;
+    var timer = null;
     var element = this;
+    var lastNotificationType = null;
     
     this.addClass('ppNotify');
     this.css(positionCss);
+    this.css('opacity', settings.opacity);
     this.append(wrapper);
     wrapper.append(messageContainer);
     wrapper.append(closeButtonContainer);
@@ -29,6 +31,24 @@
     };
     
     function show(messageType, message) {
+      if(element.is(':visible') && lastNotificationType) {
+        executeHide(function() {
+          executeShow(messageType, message, function() {
+            initDelayedHide();
+          });
+        });
+      }
+      else {
+        executeShow(messageType, message, function() {
+          initDelayedHide();
+        });
+      }
+    }
+    
+    function executeShow(messageType, message, callback) {
+      callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
+      clearTimeout(timer);
+      
       if(messageType === 'error') {
         element.css(settings.errorStyle);
         messageContainer.html(message);
@@ -43,41 +63,81 @@
       }
       
       if(settings.animation.type === 'scroll') {
-        element.animate({width: 'toggle'}, settings.animation.speed, settings.onShow.call());
+        messageContainer.css('opacity', 0.0);
+        closeButtonContainer.css('opacity', 0.0);
+        element.css('left', '-'+element.width()+'px');
+        element.show();
+
+        element.stop().animate({
+          left: '0px'
+        }, settings.animation.showSpeed, 
+        function() {
+          settings.onShow.call();
+          callback.call();
+          messageContainer.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+          closeButtonContainer.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+        });
       }
       else if(settings.animation.type === 'fade') {
-        element.fadeIn(settings.animation.speed, settings.onShow.call());
+        element.fadeIn(
+          settings.animation.showSpeed, 
+          function() {
+            settings.onShow.call();
+            callback.call();
+          });
       }
       else {
         element.show();
         settings.onShow.call();
       }
-        
-      if(settings.consoleLog) {
+
+      if(settings.log) {
         debug(messageType, message);
       }
-      
-      if(settings.autoHide === true) {
-        timeout = setTimeout(function() {
-          closeButtonContainer.trigger('click');
-        }, (settings.showDuration*1000));
-      }
-    };
+    }
     
-    closeButtonContainer.on('click', function(e) {
-      e.preventDefault();
-      clearTimeout(timeout);
+    function executeHide(callback) {
+      callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
+      clearTimeout(timer);
       
       if(settings.animation.type === 'scroll') {
-        element.animate({width: 'toggle'}, settings.animation.speed, settings.onClose.call());
+        element.stop().animate({
+          left: '-'+element.width()+'px'
+        }, settings.animation.hideSpeed, 
+        function(){
+          element.hide();
+          settings.onClose.call();
+          callback.call();
+        });
+        messageContainer.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+        closeButtonContainer.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
       }
       else if(settings.animation.type === 'fade') {
-        element.fadeOut(settings.animation.speed, settings.onClose.call());
+        element.fadeOut(
+          settings.animation.hideSpeed,
+          function() {
+            settings.onClose.call();
+            callback.call();
+          });
       }
       else {
         element.hide();
         settings.onClose.call()
       }
+    }
+    
+    function initDelayedHide() {
+      if(settings.autoHide === true) {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          executeHide();
+        }, (settings.duration*1000));
+      }
+    }
+    
+    closeButtonContainer.on('click', function(e) {
+      e.preventDefault();
+      executeHide();
     });
 
     function debug(messageType, data) {
@@ -90,6 +150,11 @@
   };
   
   $.fn.ppNotify.defaults = {
+    autoHide: true,
+    duration: 5, //seconds
+    position: 'top', //top or bottom
+    log: true,
+    opacity: 0.95,
     errorStyle: {
       color: '#FFFFFF',
       backgroundColor: 'red'
@@ -102,14 +167,11 @@
       color: '#FFFFFF',
       backgroundColor: 'green'
     },
-    consoleLog: true,
     animation: {
-      type: 'scroll', //fade, scroll or none (or empty)
-      speed: 1000
+      type: 'scroll', //fade, scroll, slide or none (or empty)
+      showSpeed: 300,
+      hideSpeed: 500
     },
-    autoHide: true,
-    showDuration: 5, //seconds
-    position: 'top', //top or bottom
     onClose: function() {},
     onShow: function() {}
   };
