@@ -1,0 +1,35 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.ppNotify {
+  display: block;
+  width: 100%;
+  color: #FFFFFF;
+  font-size: 16px;
+  *zoom: 1;
+}
+
+.ppNotify:before,
+.ppNotify:after {
+  content: " ";
+  display: table;
+}
+
+.ppNotify:after {
+  clear: both;
+}
+
+.ppNotify.error {
+  background-color: red;
+}
+
+.ppNotify.warning {
+  background-color: orange;
+}
+
+.ppNotify.success {
+  background-color: green;
+}
