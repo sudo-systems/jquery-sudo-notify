@@ -1,3 +1,8 @@
+## Demo
+
+Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notify/) that demonstrates some of the plugin's functionality
+
+
 ## Usage
 
 1. Include plugin's css:
