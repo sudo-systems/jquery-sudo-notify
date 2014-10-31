@@ -3,7 +3,6 @@
     var settings = $.extend(true, {}, $.fn.sudoNotify.defaults, options);
     var topCss = {top:0, bottom:''};
     var bottomCss = {bottom:0, top:''};
-    var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
     var timer = null;
     var element = this;
     var currentMessageType = '';
@@ -48,6 +47,7 @@
     }
     
     function show(messageType, message) {
+      var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
       element.css(positionCss);
       element.css('opacity', settings.opacity);
       
@@ -123,15 +123,14 @@
         }
         
         wrapper.css('opacity', 0.0);
-        element.css('top', '-'+element.height());
+        element.css(settings.position, '-'+element.height());
         element.show();
         
-        var animationOptions = {
-          top: '0px'
-        };
+        var animationOptions = {};
+        animationOptions[settings.position] = '0px';
         
         if(settings.animation.type === 'slide-fade') {
-          animationOptions.opacity= settings.opacity;
+          animationOptions['opacity'] = settings.opacity;
         }
         
         element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
@@ -174,7 +173,7 @@
         if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
           animationOptions.opacity= 0.0;
         }
-        
+
         element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
           function(){
             element.hide();
@@ -186,14 +185,13 @@
         wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
       }
       else if(settings.animation.type === 'slide' || settings.animation.type === 'slide-fade') {
-        var animationOptions = {
-          top: '-'+element.height()
-        };
+        var animationOptions = {};
+        animationOptions[settings.position] = '-'+element.height();
         
         if(settings.animation.type === 'slide-fade') {
-          animationOptions.opacity= 0.0;
+          animationOptions['opacity'] = 0.0;
         }
-        
+
         wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
         
         element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 

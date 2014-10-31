@@ -3,7 +3,7 @@
   font-size: 18px;
   color: #FFFFFF;
   *zoom: 1;
-  position: fixed;
+  position: absolute;
   left: 0;
   text-align: center;
   display: none;
