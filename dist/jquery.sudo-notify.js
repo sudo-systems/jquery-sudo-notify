@@ -6,7 +6,7 @@
     var timer = null;
     var element = this;
     var currentMessageType = '';
-    var cssPosition = this.parent().is('body')? 'fixed' : 'relative';
+    var cssPosition = this.parent().is('body')? 'fixed' : 'absolute';
     var messageContainer = $('<div></div>').addClass('message');
     var closeButtonContainer = $('<div></div>').addClass('close-button');
     var wrapper = $('<div></div>').addClass('wrapper').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
