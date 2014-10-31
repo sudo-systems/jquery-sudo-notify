@@ -14,6 +14,113 @@
     <![endif]-->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://raw.githubusercontent.com/sudo-systems/jquery-sudo-notify/master/dist/jquery.sudo-notify.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        var showCallbackNotifications = false;
+        var countdown = null;
+        
+        var sudoNotify = $('.notification-container').sudoNotify({
+          autoHide: true,
+          showCloseButton: true,
+          duration: 6, //seconds
+          position: 'top', //top or bottom
+          log: true,
+          opacity: 0.90,
+          errorStyle: {
+            color: '#000000',
+            backgroundColor: '#FF9494'
+          },
+          warningStyle: {
+            color: '#000000',
+            backgroundColor: '#FFFF96'
+          },
+          successStyle: {
+            color: '#000000',
+            backgroundColor: '#B8FF6D'
+          },
+          animation: {
+            type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+            showSpeed: 400,
+            hideSpeed: 250
+          },
+          onClose: function(notificationType) {
+            if(showCallbackNotifications){
+              alert(notificationType+ ' notification closed');
+            }
+            
+            if(sudoNotify.getOption('autoHide') === true) {
+              clearInterval(countdown);
+              $('.countdown').fadeOut();
+              $('select#timeout').attr('disabled', false);
+            }
+          },
+          onShow: function(notificationType) {
+            if(showCallbackNotifications){
+              alert(notificationType+ ' notification showing');
+            }
+ 
+            if(sudoNotify.getOption('autoHide') === true) {
+              var duration = sudoNotify.getOption('duration');
+              $('.countdown > span').html(duration);
+              $('.countdown').fadeIn();
+              $('select#timeout').attr('disabled', true);
+
+              duration = duration-1;
+              countdown = setInterval(function(){
+                if(duration === -1) {
+                  clearInterval(countdown);
+                  $('.countdown').fadeOut();
+                  $('select#timeout').attr('disabled', false);
+                  return;
+                }
+                
+                $('.countdown > span').html(duration);
+                duration--;
+              }, 1000);
+            }
+          }
+        });
+
+        $('.success').click(function(){
+          sudoNotify.success('Great success!!!');
+        });
+
+        $('.warning').click(function(){
+          sudoNotify.warning('Somthing\'s ratteling!');
+        });
+
+        $('.error').click(function(){
+          sudoNotify.error('Stop right now!!!');
+        });
+
+        $('#animationType').change(function() {
+          sudoNotify.setOption('animation', {
+            type: $(this).val(),
+            showSpeed: $.fn.sudoNotify.defaults.animation.showSpeed,
+            hideSpeed: $.fn.sudoNotify.defaults.animation.hideSpeed
+          });
+        });
+        
+        $('#timeout').change(function() {
+          if($(this).val() === '0') {
+            sudoNotify.setOption('autoHide', false);
+          }
+          else {
+            sudoNotify.setOption('autoHide', true);
+            sudoNotify.setOption('duration', $(this).val());
+          }
+        });
+        
+        $('input[name=showCallbackNotifications]:radio').change(function() {
+          showCallbackNotifications = ($(this).val() === '1');
+        });
+      });
+    </script>
+    <style>
+      .countdown {
+        display: none;
+      }
+    </style>
   </head>
   <body>
     <div class="wrapper">
@@ -34,7 +141,44 @@
         <h3>
           <a name="welcome-to-sudo-notify" class="anchor" href="#welcome-to-sudo-notify"><span class="octicon octicon-link"></span></a>jQuery Sudo Notify plugin
         </h3>
-
+        <br />
+        <br />
+        <label>Show callback notifications: </label>
+        yes <input type="radio" name="showCallbackNotifications" value="1" />
+        no <input type="radio" name="showCallbackNotifications" value="0" checked="checked" />
+        <br />
+        <br />
+        <label for="timeout">Hide notification after: </label>
+        <select name="timeout" id="timeout">
+          <option value="0">Never</option>
+          <option value="2">2</option>
+          <option value="4">4</option>
+          <option value="6" selected="selected">6</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select> seconds <span class="countdown">(<span></span> seconds to go)</span>
+        <br />
+        <br />
+        <label for="animationType">Animation type: </label>
+        <select name="animationType" id="animationType">
+          <option value="scroll-left">Scroll left</option>
+          <option value="scroll-left-fade">Scroll left and fade</option>
+          <option value="scroll-right">Scroll right</option>
+          <option value="scroll-right-fade">Scroll right and fade</option>
+          <option value="slide">Slide</option>
+          <option value="slide-fade" selected="selected">Slide and fade</option>
+          <option value="fade">Fade</option>
+          <option value="none">None</option>
+        </select>
+        <br />
+        <br />
+        <button class="success">Show success</button>
+        &nbsp;
+        <button class="warning">Show warning</button>
+        &nbsp;
+        <button class="error">Show error</button>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/sudo-systems">sudo-systems</a></p>
