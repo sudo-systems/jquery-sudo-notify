@@ -51,7 +51,11 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
         duration: 6, //seconds
         position: 'top', //top or bottom
         log: true, //log all messages to console with timestamp
-        opacity: 0.90,
+        opacity: 0.95,
+        defaultStyle: {
+          maxWidth: '1000px',
+          fontSize: '16px'
+        },
         errorStyle: { //allows for all possible css options
           color: '#000000',
           backgroundColor: '#FF9494'
@@ -89,6 +93,10 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
       position: 'top', //top or bottom
       log: true,
       opacity: 0.95,
+`     defaultStyle: {
+        maxWidth: '1000px',
+        fontSize: '16px'
+      },
       errorStyle: {
         color: '#000000',
         backgroundColor: '#FF9494'
@@ -118,7 +126,6 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
 ## TODO
 
 1. Stop the scrollbars from appearing when a scroll or slide animation is in progress
-2. Add maxWidth parameter to the options. All though this can already be accomplished by applying the param to 'errorStyle', 'successStyle' and 'warningStyle', this isn't a very pretty solution.
 
 
 ## License
