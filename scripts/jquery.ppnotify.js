@@ -83,19 +83,57 @@
         messageContainer.html(message);
       }
       
-      if(settings.animation.type === 'scroll') {
+      if(settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-left' || settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
+        var initialPosition = (settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
+        
+        if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
+          element.css('opacity', 0.0);
+        }
+        
         wrapper.css('opacity', 0.0);
-        element.css('left', '-'+element.width()+'px');
+        element.css('left', initialPosition);
         element.show();
 
-        element.stop().animate({
+        var animationOptions = {
           left: '0px'
-        }, settings.animation.showSpeed, 
-        function() {
-          settings.onShow(currentMessageType);
-          callback();
-          wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
-        });
+        };
+        
+        if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
+          animationOptions.opacity= settings.opacity;
+        }
+
+        element.stop().animate(animationOptions, settings.animation.showSpeed, 
+          function() {
+            settings.onShow(currentMessageType);
+            callback();
+            wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+          }
+        );
+      }
+      else if(settings.animation.type === 'slide' || settings.animation.type === 'slide-fade') {
+        if(settings.animation.type === 'slide-fade') {
+          element.css('opacity', 0.0);
+        }
+        
+        wrapper.css('opacity', 0.0);
+        element.css('top', '-'+element.height());
+        element.show();
+        
+        var animationOptions = {
+          top: '0px'
+        };
+        
+        if(settings.animation.type === 'slide-fade') {
+          animationOptions.opacity= settings.opacity;
+        }
+        
+        element.stop().animate(animationOptions, settings.animation.showSpeed, 
+          function() {
+            settings.onShow(currentMessageType);
+            callback();
+            wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+          }
+        );
       }
       else if(settings.animation.type === 'fade') {
         element.fadeIn(
@@ -119,17 +157,45 @@
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
       clearTimeout(timer);
       
-      if(settings.animation.type === 'scroll') {
-        element.stop().animate({
-          left: '-'+element.width()+'px'
-        }, settings.animation.hideSpeed, 
-        function(){
-          element.hide();
-          settings.onClose(currentMessageType);
-          callback();
-        });
+      if(settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-left' || settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
+        var targetPosition = (settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
+        
+        var animationOptions = {
+          left: targetPosition
+        };
+        
+        if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
+          animationOptions.opacity= 0.0;
+        }
+        
+        element.stop().animate(animationOptions, settings.animation.hideSpeed, 
+          function(){
+            element.hide();
+            settings.onClose(currentMessageType);
+            callback();
+          }
+        );
         
         wrapper.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+      }
+      else if(settings.animation.type === 'slide' || settings.animation.type === 'slide-fade') {
+        var animationOptions = {
+          top: '-'+element.height()
+        };
+        
+        if(settings.animation.type === 'slide-fade') {
+          animationOptions.opacity= 0.0;
+        }
+        
+        wrapper.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+        
+        element.stop().animate(animationOptions, settings.animation.hideSpeed, 
+          function(){
+            element.hide();
+            settings.onClose(currentMessageType);
+            callback();
+          }
+        );
       }
       else if(settings.animation.type === 'fade') {
         element.fadeOut(
@@ -218,7 +284,7 @@
       backgroundColor: '#B8FF6D'
     },
     animation: {
-      type: 'scroll', //fade, scroll, slide or none
+      type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
       showSpeed: 400 ,
       hideSpeed: 250
     },
