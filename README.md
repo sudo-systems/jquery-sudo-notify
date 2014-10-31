@@ -79,6 +79,43 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
     });
 	```
 
+5. OPTIONAL: Or overwrite the default configuration before initiating the plugin (all attributes are optional)
+
+    ```javascript
+    $.fn.sudoNotify.defaults = {
+      autoHide: true,
+      showCloseButton: true,
+      duration: 5, //seconds
+      position: 'top', //top or bottom
+      log: true,
+      opacity: 0.95,
+      errorStyle: {
+        color: '#000000',
+        backgroundColor: '#FF9494'
+      },
+      warningStyle: {
+        color: '#000000',
+        backgroundColor: '#FFFF96'
+      },
+      successStyle: {
+        color: '#000000',
+        backgroundColor: '#B8FF6D'
+      },
+      animation: {
+        type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+        showSpeed: 400 ,
+        hideSpeed: 250
+      },
+      onClose: function(notificationType) {
+        alert(notificationType+ ' notification closed');
+      },
+      onShow: function(notificationType) {
+        alert(notificationType+ ' notification showing');
+      }
+    };
+	```
+
+
 ## License
 
 [MIT License](http://zenorocha.mit-license.org/) © Bram van Oploo / http://sudo-systems.com
