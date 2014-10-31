@@ -45,7 +45,7 @@
 
 .sudoNotify > .wrapper > .message {
   display: inline-block;
-  padding: 20px 0 20px 65px;
+  padding: 1.5% 0 1.5% 65px;
 }
 
 .sudoNotify > .wrapper > .close-button {
