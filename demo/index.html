@@ -44,7 +44,7 @@
             backgroundColor: '#B8FF6D'
           },
           animation: {
-            type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+            type: $('#animationType').val(), //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
             showSpeed: 400,
             hideSpeed: 250
           },
@@ -278,9 +278,9 @@
                   <option value="none">None</option>
                   <option value="fade">Fade</option>
                   <option value="slide">Slide</option>
-                  <option value="slide-fade">Slide and fade</option>
+                  <option value="slide-fade" selected="selected">Slide and fade</option>
                   <option value="scroll-left">Scroll left</option>
-                  <option value="scroll-left-fade" selected="selected">Scroll left and fade</option>
+                  <option value="scroll-left-fade">Scroll left and fade</option>
                   <option value="scroll-right">Scroll right</option>
                   <option value="scroll right-fade">Scroll right and fade</option>
                 </select>
