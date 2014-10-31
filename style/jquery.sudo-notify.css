@@ -4,7 +4,7 @@ body {
   padding: 0;
 }
 
-.ppNotify {
+.sudoNotify {
   font-family:inherit;
   font-size: 18px;
   color: #FFFFFF;
@@ -16,29 +16,29 @@ body {
   width: 100%;
 }
 
-.ppNotify:before,
-.ppNotify:after {
+.sudoNotify:before,
+.sudoNotify:after {
   content: " ";
   display: table;
 }
 
-.ppNotify:after {
+.sudoNotify:after {
   clear: both;
 }
 
-.ppNotify.error > .wrapper > .message {
+.sudoNotify.error > .wrapper > .message {
   background: transparent url('../images/icon_error.png') no-repeat left center;
 }
 
-.ppNotify.warning > .wrapper > .message {
+.sudoNotify.warning > .wrapper > .message {
   background: transparent url('../images/icon_warning.png') no-repeat left center;
 }
 
-.ppNotify.success > .wrapper > .message {
+.sudoNotify.success > .wrapper > .message {
   background: transparent url('../images/icon_success.png') no-repeat left center;
 }
 
-.ppNotify > .wrapper {
+.sudoNotify > .wrapper {
   display: inline-block;
   margin: auto;
   max-width: 1200px;
@@ -46,13 +46,13 @@ body {
   text-align: left;
 }
 
-.ppNotify > .wrapper > .message {
+.sudoNotify > .wrapper > .message {
   display: inline-block;
   padding: 20px 0 20px 40px;
   float: left;
 }
 
-.ppNotify > .wrapper > .close-button {
+.sudoNotify > .wrapper > .close-button {
   display: inline-block;
   width: 35px;
   height: 35px;

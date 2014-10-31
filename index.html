@@ -1,15 +1,15 @@
 <html>
   <head>
     <title>jQuery ppNotify plugin</title>
-    <link rel="stylesheet" type="text/css" href="style/jquery.ppnotify.css" />
+    <link rel="stylesheet" type="text/css" href="style/jquery.sudo-notify.css" />
     <script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="scripts/jquery.ppnotify.js"></script>
+    <script type="text/javascript" src="scripts/jquery.sudo-notify.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         var showCallbackNotifications = false;
         var countdown = null;
         
-        var ppNotify = $('.notification-container').ppNotify({
+        var ppNotify = $('.notification-container').sudoNotify({
           autoHide: true,
           showCloseButton: true,
           duration: 6, //seconds
@@ -86,8 +86,8 @@
         $('#animationType').change(function() {
           ppNotify.setOption('animation', {
             type: $(this).val(),
-            showSpeed: $.fn.ppNotify.defaults.animation.showSpeed,
-            hideSpeed: $.fn.ppNotify.defaults.animation.hideSpeed
+            showSpeed: $.fn.sudoNotify.defaults.animation.showSpeed,
+            hideSpeed: $.fn.sudoNotify.defaults.animation.hideSpeed
           });
         });
         
@@ -99,12 +99,6 @@
             ppNotify.setOption('autoHide', true);
             ppNotify.setOption('duration', $(this).val());
           }
-          
-          ppNotify.setOption('animation', {
-            type: $(this).val(),
-            showSpeed: $.fn.ppNotify.defaults.animation.showSpeed,
-            hideSpeed: $.fn.ppNotify.defaults.animation.hideSpeed
-          });
         });
         
         $('input[name=showCallbackNotifications]:radio').change(function() {

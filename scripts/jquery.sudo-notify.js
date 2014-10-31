@@ -1,6 +1,6 @@
 (function($) {
-  $.fn.ppNotify = function(options) {
-    var settings = $.extend(true, {}, $.fn.ppNotify.defaults, options);
+  $.fn.sudoNotify = function(options) {
+    var settings = $.extend(true, {}, $.fn.sudoNotify.defaults, options);
     var topCss = {top:0, bottom:''};
     var bottomCss = {bottom:0, top:''};
     var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
@@ -11,7 +11,7 @@
     var wrapper = $('<div></div>');
     var messageContainer = $('<div></div>');
     
-    this.addClass('ppNotify');
+    this.addClass('sudoNotify');
     this.css(positionCss);
     this.css('opacity', settings.opacity);
     wrapper.addClass('wrapper');
@@ -268,7 +268,7 @@
     return this;
   };
   
-  $.fn.ppNotify.defaults = {
+  $.fn.sudoNotify.defaults = {
     autoHide: true,
     showCloseButton: true,
     duration: 5, //seconds
