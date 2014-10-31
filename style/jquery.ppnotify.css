@@ -6,7 +6,7 @@ body {
 
 .ppNotify {
   font-family:inherit;
-  font-size: 16px;
+  font-size: 18px;
   color: #FFFFFF;
   *zoom: 1;
   position: fixed;
@@ -26,16 +26,16 @@ body {
   clear: both;
 }
 
-.ppNotify.error {
-  background-color: red;
+.ppNotify.error > .wrapper > .message {
+  background: transparent url('../images/icon_error.png') no-repeat left center;
 }
 
-.ppNotify.warning {
-  background-color: orange;
+.ppNotify.warning > .wrapper > .message {
+  background: transparent url('../images/icon_warning.png') no-repeat left center;
 }
 
-.ppNotify.success {
-  background-color: green;
+.ppNotify.success > .wrapper > .message {
+  background: transparent url('../images/icon_success.png') no-repeat left center;
 }
 
 .ppNotify > .wrapper {
@@ -44,20 +44,20 @@ body {
   max-width: 1200px;
   width: 100%;
   text-align: left;
-  height: 60px;
 }
 
 .ppNotify > .wrapper > .message {
   display: inline-block;
-  padding: 20px;
+  padding: 20px 0 20px 40px;
   float: left;
 }
 
 .ppNotify > .wrapper > .close-button {
   display: inline-block;
   width: 35px;
-  height: 100%;
-  padding: 20px 0 20px 0;
+  height: 35px;
+  margin-top: 10px;
   float: right;
   cursor: pointer;
+  background: transparent url('../images/icon_close.png') no-repeat center center;
 }

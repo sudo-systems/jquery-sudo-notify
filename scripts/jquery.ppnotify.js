@@ -1,23 +1,31 @@
 (function($) {
   $.fn.ppNotify = function(options) {
     var settings = $.extend(true, {}, $.fn.ppNotify.defaults, options);
-    var wrapper = $('<div class="wrapper"></div>');
-    var messageContainer = $('<div class="message"></div>');
-    var closeButtonContainer = $('<div class="close-button">X</div>');
     var topCss = {top:0, bottom:''};
     var bottomCss = {bottom:0, top:''};
     var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
     var timer = null;
     var element = this;
-    var lastNotificationType = null;
+    var currentMessageType = '';
+    
+    var wrapper = $('<div></div>');
+    var messageContainer = $('<div></div>');
     
     this.addClass('ppNotify');
     this.css(positionCss);
     this.css('opacity', settings.opacity);
+    wrapper.addClass('wrapper');
+    messageContainer.addClass('message');
+    
     this.append(wrapper);
     wrapper.append(messageContainer);
-    wrapper.append(closeButtonContainer);
-
+    
+    if(settings.showCloseButton) {
+      var closeButtonContainer = $('<div></div>');
+      closeButtonContainer.addClass('close-button');
+      wrapper.append(closeButtonContainer);
+    }
+ 
     this.error = function(message) {
       show('error', message);
     };
@@ -30,15 +38,26 @@
       show('success', message);
     };
     
+    this.setOption = function(key, value) {
+      settings[key] = value;
+    };
+    
+    function setClass(className) {
+      element.removeClass('error warning success');
+      element.addClass(className);
+    }
+    
     function show(messageType, message) {
-      if(element.is(':visible') && lastNotificationType) {
+      if(element.is(':visible') && settings.animation.type !== 'none') {
         executeHide(function() {
+          currentMessageType = messageType;
           executeShow(messageType, message, function() {
             initDelayedHide();
           });
         });
       }
       else {
+        currentMessageType = messageType;
         executeShow(messageType, message, function() {
           initDelayedHide();
         });
@@ -48,6 +67,8 @@
     function executeShow(messageType, message, callback) {
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
       clearTimeout(timer);
+      
+      setClass(messageType);
       
       if(messageType === 'error') {
         element.css(settings.errorStyle);
@@ -63,8 +84,7 @@
       }
       
       if(settings.animation.type === 'scroll') {
-        messageContainer.css('opacity', 0.0);
-        closeButtonContainer.css('opacity', 0.0);
+        wrapper.css('opacity', 0.0);
         element.css('left', '-'+element.width()+'px');
         element.show();
 
@@ -72,23 +92,22 @@
           left: '0px'
         }, settings.animation.showSpeed, 
         function() {
-          settings.onShow.call();
-          callback.call();
-          messageContainer.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
-          closeButtonContainer.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+          settings.onShow(currentMessageType);
+          callback();
+          wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
         });
       }
       else if(settings.animation.type === 'fade') {
         element.fadeIn(
           settings.animation.showSpeed, 
           function() {
-            settings.onShow.call();
-            callback.call();
+            settings.onShow(currentMessageType);
+            callback();
           });
       }
       else {
         element.show();
-        settings.onShow.call();
+        settings.onShow(currentMessageType);
       }
 
       if(settings.log) {
@@ -106,23 +125,25 @@
         }, settings.animation.hideSpeed, 
         function(){
           element.hide();
-          settings.onClose.call();
-          callback.call();
+          settings.onClose(currentMessageType);
+          callback();
         });
-        messageContainer.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
-        closeButtonContainer.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+        
+        wrapper.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
       }
       else if(settings.animation.type === 'fade') {
         element.fadeOut(
           settings.animation.hideSpeed,
           function() {
-            settings.onClose.call();
-            callback.call();
+            settings.onClose(currentMessageType);
+            callback();
+            currentMessageType = '';
           });
       }
       else {
         element.hide();
-        settings.onClose.call()
+        settings.onClose(currentMessageType)
+        currentMessageType = '';
       }
     }
     
@@ -139,10 +160,38 @@
       e.preventDefault();
       executeHide();
     });
+    
+    function getDateTime() {
+      var now     = new Date(); 
+      var year    = now.getFullYear();
+      var month   = now.getMonth()+1; 
+      var day     = now.getDate();
+      var hour    = now.getHours();
+      var minute  = now.getMinutes();
+      var second  = now.getSeconds(); 
+      
+      if(month.toString().length === 1) {
+          var month = '0'+month;
+      }
+      if(day.toString().length === 1) {
+          var day = '0'+day;
+      }   
+      if(hour.toString().length === 1) {
+          var hour = '0'+hour;
+      }
+      if(minute.toString().length === 1) {
+          var minute = '0'+minute;
+      }
+      if(second.toString().length === 1) {
+          var second = '0'+second;
+      }   
+      
+      return day+'-'+month+'-'+year+' '+hour+':'+minute+':'+second;
+  }
 
     function debug(messageType, data) {
       if(window.console && window.console.log) {
-        window.console.log('ppNotify ' +messageType+ ': "' +data+ '"');
+        window.console.log(getDateTime()+' ~ ' +messageType+ ': "' +data+ '"');
       }
     };
     
@@ -151,26 +200,27 @@
   
   $.fn.ppNotify.defaults = {
     autoHide: true,
+    showCloseButton: true,
     duration: 5, //seconds
     position: 'top', //top or bottom
     log: true,
     opacity: 0.95,
     errorStyle: {
-      color: '#FFFFFF',
-      backgroundColor: 'red'
+      color: '#000000',
+      backgroundColor: '#FF9494'
     },
     warningStyle: {
-      color: '#FFFFFF',
-      backgroundColor: 'orange'
+      color: '#000000',
+      backgroundColor: '#FFFF96'
     },
     successStyle: {
-      color: '#FFFFFF',
-      backgroundColor: 'green'
+      color: '#000000',
+      backgroundColor: '#B8FF6D'
     },
     animation: {
-      type: 'scroll', //fade, scroll, slide or none (or empty)
-      showSpeed: 300,
-      hideSpeed: 500
+      type: 'scroll', //fade, scroll, slide or none
+      showSpeed: 400 ,
+      hideSpeed: 250
     },
     onClose: function() {},
     onShow: function() {}
