@@ -115,6 +115,10 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
     };
 	```
 
+## TODO
+
+1. Stop the scrollbars from appearing when a scroll or slide animation is in progress
+
 
 ## License
 
