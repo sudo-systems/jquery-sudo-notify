@@ -54,6 +54,9 @@
       if(closeButtonContainer !== 'undefined' && !settings.showCloseButton) {
         closeButtonContainer.hide();
       }
+      else {
+        closeButtonContainer.show();
+      }
       
       if(element.is(':visible') && settings.animation.type !== 'none') {
         executeHide(function() {
