@@ -42,6 +42,10 @@
       settings[key] = value;
     };
     
+    this.getOption = function(key) {
+      return settings[key];
+    };
+    
     function setClass(className) {
       element.removeClass('error warning success');
       element.addClass(className);
