@@ -7,7 +7,8 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <link rel="stylesheet" href="http://rawgit.com/sudo-systems/jquery-sudo-notify/master/dist/style/jquery.sudo-notify.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://rawgit.com/sudo-systems/jquery-sudo-notify/master/dist/style/jquery.sudo-notify.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -25,7 +26,7 @@
           duration: 6, //seconds
           position: 'top', //top or bottom
           log: true,
-          opacity: 0.90,
+          opacity: 0.95,
           errorStyle: {
             color: '#000000',
             backgroundColor: '#FF9494'
@@ -39,7 +40,7 @@
             backgroundColor: '#B8FF6D'
           },
           animation: {
-            type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+            type: 'scroll-left-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
             showSpeed: 400,
             hideSpeed: 250
           },
@@ -50,8 +51,8 @@
             
             if(sudoNotify.getOption('autoHide') === true) {
               clearInterval(countdown);
-              $('.countdown').fadeOut();
-              $('select#timeout').attr('disabled', false);
+              $('.countdown').slideUp('fast');
+              $('#timeout').attr('disabled', false);
             }
           },
           onShow: function(notificationType) {
@@ -62,15 +63,17 @@
             if(sudoNotify.getOption('autoHide') === true) {
               var duration = sudoNotify.getOption('duration');
               $('.countdown > span').html(duration);
-              $('.countdown').fadeIn();
-              $('select#timeout').attr('disabled', true);
-
+              $('#timeout').attr('disabled', true);
+              $('.countdown').slideDown('fast');
+              
               duration = duration-1;
               countdown = setInterval(function(){
                 if(duration === -1) {
                   clearInterval(countdown);
-                  $('.countdown').fadeOut();
-                  $('select#timeout').attr('disabled', false);
+                  $('.countdown').slideUp('fast', function() {
+                    $('#timeout').attr('disabled', false);
+                  });
+                  
                   return;
                 }
                 
@@ -81,15 +84,15 @@
           }
         });
 
-        $('.success').click(function(){
+        $('#successButton').click(function(){
           sudoNotify.success('Great success!!!');
         });
 
-        $('.warning').click(function(){
+        $('#warningButton').click(function(){
           sudoNotify.warning('Somthing\'s ratteling!');
         });
 
-        $('.error').click(function(){
+        $('#errorButton').click(function(){
           sudoNotify.error('Stop right now!!!');
         });
 
@@ -111,26 +114,64 @@
           }
         });
         
-        $('input[name=showCallbackNotifications]:radio').change(function() {
+        $('#showCallbackNotifications').change(function() {
           showCallbackNotifications = ($(this).val() === '1');
         });
         
-        $('input[name=position]:radio').change(function() {
+        $('#position').change(function() {
           sudoNotify.setOption('position', $(this).val());
         });
         
-        $('input[name=showCloseButton]:radio').change(function() {
+        $('#showCloseButton').change(function() {
           sudoNotify.setOption('showCloseButton', ($(this).val() ==='1'));
+        });
+        
+        //Notifications within container
+        var sudoNotify2 = $('.notification-container-2').sudoNotify({
+          animation: {
+            type: 'scroll-left-fade'
+          }
+        });
+        
+        $('#successButton-2').click(function(){
+          sudoNotify2.success('Great success!!!');
+        });
+
+        $('#warningButton-2').click(function(){
+          sudoNotify2.warning('Somthing\'s ratteling!');
+        });
+
+        $('#errorButton-2').click(function(){
+          sudoNotify2.error('Stop right now!!!');
         });
       });
     </script>
     <style>
-      html,
       body {
-        font-size: 14px !important;
+        background-color: #EFEFEF;
       }
       .countdown {
         display: none;
+        line-height: 30px;
+        white-space: nowrap;
+      }
+      .notificationWithin > fieldset{
+        position: relative;
+        overflow: hidden;
+      }
+      header, footer {
+        border-right: 1px solid #DDD;
+        padding: 10px;
+        width: 300px;
+      }
+      header > h1 {
+        font-size: 28px;
+      }
+      section {
+        background-color: #FFF;
+        padding: 50px 40px 50px 40px;
+        width: 550px;
+        border-radius: 10px;
       }
     </style>
   </head>
@@ -138,12 +179,10 @@
     <div class="notification-container"></div>
     <div class="wrapper">
       <header>
-        <h1>Jquery Sudo Notify</h1>
+        <h1>jQuery Sudo Notify</h1>
         <p>A jquery plugin for displaying full width notifications with animation options</p>
 
         <p class="view"><a href="https://github.com/sudo-systems/jquery-sudo-notify">View the Project on GitHub <small>sudo-systems/jquery-sudo-notify</small></a></p>
-
-
         <ul>
           <li><a href="https://github.com/sudo-systems/jquery-sudo-notify/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/sudo-systems/jquery-sudo-notify/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -151,57 +190,100 @@
         </ul>
       </header>
       <section>
-        <h3>
-          <a name="welcome-to-sudo-notify" class="anchor" href="#welcome-to-sudo-notify"><span class="octicon octicon-link"></span></a>jQuery Sudo Notify plugin Demo
-        </h3>
+        <div class="form-horizontal">
+          <fieldset>
+            <legend>
+              Full page notifications
+            </legend>
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="showCloseButton">Show close button</label>
+              <div class="col-md-3">
+                <select id="showCloseButton" name="showCloseButton" class="form-control">
+                  <option value="1" selected="selected">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="position">Top or bottom?</label>
+              <div class="col-md-3">
+                <select id="position" name="position" class="form-control">
+                  <option value="top" selected="selected">Top</option>
+                  <option value="bottom">Bottom</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="showCallbackNotifications">Show callback alerts</label>
+              <div class="col-md-3">
+                <select id="showCallbackNotifications" name="showCallbackNotifications" class="form-control">
+                  <option value="1">Yes</option>
+                  <option value="0" selected="selected">No</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="timeout">Hide notification after (seconds)</label>
+              <div class="col-md-3">
+                <select id="timeout" name="timeout" class="form-control">
+                  <option value="0">Never</option>
+                  <option value="2">2</option>
+                  <option value="4">4</option>
+                  <option value="6" selected="selected">6</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                </select>
+                <span class="countdown"><span></span> seconds remaining</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-6 control-label" for="animationType">Animation type</label>
+              <div class="col-md-6">
+                <select id="animationType" name="animationType" class="form-control">
+                  <option value="none">None</option>
+                  <option value="fade">Fade</option>
+                  <option value="slide">Slide</option>
+                  <option value="slide-fade">Slide and fade</option>
+                  <option value="scroll-left">Scroll left</option>
+                  <option value="scroll-left-fade" selected="selected">Scroll left and fade</option>
+                  <option value="scroll-right">Scroll right</option>
+                  <option value="scroll right-fade">Scroll right and fade</option>
+                </select>
+              </div>
+            </div>
+            <br />
+            <div class="form-group" style="float: left; padding-left: 20px;">
+              <button id="successButton" name="successButton" class="btn btn-success">Show success</button>
+              <button id="warningButton" name="warningButton" class="btn btn-warning">Show warning</button>
+              <button id="errorButton" name="errorButton" class="btn btn-danger">Show warning</button>
+            </div>
+
+          </fieldset>
+        </div>
         <br />
         <br />
-        <label>Show close button: </label>
-        <input type="radio" name="showCloseButton" value="1" checked="checked" /> yes
-        <input type="radio" name="showCloseButton" value="0" /> no
-        <br />
-        <br />
-        <label>Top or bottom?: </label>
-        <input type="radio" name="position" value="top" checked="checked" /> top
-        <input type="radio" name="position" value="bottom" /> bottom
-        <br />
-        <br />
-        <label>Show callback notifications: </label>
-        <input type="radio" name="showCallbackNotifications" value="1" /> yes
-        <input type="radio" name="showCallbackNotifications" value="0" checked="checked" /> no
-        <br />
-        <br />
-        <label for="timeout">Hide notification after: </label>
-        <select name="timeout" id="timeout">
-          <option value="0">Never</option>
-          <option value="2">2</option>
-          <option value="4">4</option>
-          <option value="6" selected="selected">6</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-        </select> seconds <span class="countdown">(<span></span> seconds to go)</span>
-        <br />
-        <br />
-        <label for="animationType">Animation type: </label>
-        <select name="animationType" id="animationType">
-          <option value="scroll-left">Scroll left</option>
-          <option value="scroll-left-fade">Scroll left and fade</option>
-          <option value="scroll-right">Scroll right</option>
-          <option value="scroll-right-fade">Scroll right and fade</option>
-          <option value="slide">Slide</option>
-          <option value="slide-fade" selected="selected">Slide and fade</option>
-          <option value="fade">Fade</option>
-          <option value="none">None</option>
-        </select>
-        <br />
-        <br />
-        <button class="success">Show success</button>
-        &nbsp;
-        <button class="warning">Show warning</button>
-        &nbsp;
-        <button class="error">Show error</button>
+        <div class="form-horizontal notificationWithin">
+          <fieldset>
+            <legend>
+              Notifications within container
+            </legend>
+            <div class="notification-container-2"></div>
+            <div>
+              Suspendisse nisl elit, rhoncus eget, elementum ac, condimentum eget, diam. Vestibulum fringilla pede sit amet augue.
+              Duis lobortis massa imperdiet quam. Fusce vulputate eleifend sapien.
+            </div>
+            <br />
+            <br />
+            <div class="form-group" style="float: left; padding-left: 20px;">
+              <button id="successButton-2" name="successButton-2" class="btn btn-success">Show success</button>
+              <button id="warningButton-2" name="warningButton-2" class="btn btn-warning">Show warning</button>
+              <button id="errorButton-2" name="errorButton-2" class="btn btn-danger">Show warning</button>
+            </div>
+
+          </fieldset>
+        </div>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/sudo-systems">sudo-systems</a></p>
