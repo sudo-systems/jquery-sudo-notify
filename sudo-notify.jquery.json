@@ -1,0 +1,37 @@
+{
+	"name": "sudo-notify",
+	"title": "jQuery Sudo Notify",
+	"description": "A jquery plugin for displaying full width notifications with animation options",
+	"keywords": [
+		"jquery",
+		"notify",
+        "notification",
+		"plugins"
+	],
+	"version": "0.1.0",
+	"author": {
+		"name": "Bram van Oploo",
+		"email": "bram@sudo-systems.com",
+		"url": "http://sudo-systems.com"
+	},
+	"maintainers": [
+		{
+			"name": "Bram van Oploo",
+			"email": "bram@sudo-systems.com",
+			"url": "http://sudo-systems.com"
+		}
+	],
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://zenorocha.mit-license.org/"
+		}
+	],
+	"bugs": "https://github.com/sudo-systems/jquery-sudo-notify/issues",
+	"homepage": "http://sudo-systems.github.io/jquery-sudo-notify",
+	"docs": "https://github.com/sudo-systems/jquery-sudo-notify#readme",
+	"download": "https://github.com/sudo-systems/jquery-sudo-notify/archive/0.1.0.zip",
+	"dependencies": {
+		"jquery": ">=1.4"
+	}
+}

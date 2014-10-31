@@ -1,15 +1,15 @@
 <html>
   <head>
-    <title>jQuery ppNotify plugin</title>
-    <link rel="stylesheet" type="text/css" href="style/jquery.sudo-notify.css" />
+    <title>jQuery sudoNotify plugin</title>
+    <link rel="stylesheet" type="text/css" href="style/jquery.sudo-notify.min.css" />
     <script type="text/javascript" src="scripts/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="scripts/jquery.sudo-notify.js"></script>
+    <script type="text/javascript" src="scripts/jquery.sudo-notify.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         var showCallbackNotifications = false;
         var countdown = null;
         
-        var ppNotify = $('.notification-container').sudoNotify({
+        var sudoNotify = $('.notification-container').sudoNotify({
           autoHide: true,
           showCloseButton: true,
           duration: 6, //seconds
@@ -38,7 +38,7 @@
               alert(notificationType+ ' notification closed');
             }
             
-            if(ppNotify.getOption('autoHide') === true) {
+            if(sudoNotify.getOption('autoHide') === true) {
               clearInterval(countdown);
               $('.countdown').fadeOut();
               $('select#timeout').attr('disabled', false);
@@ -49,8 +49,8 @@
               alert(notificationType+ ' notification showing');
             }
  
-            if(ppNotify.getOption('autoHide') === true) {
-              var duration = ppNotify.getOption('duration');
+            if(sudoNotify.getOption('autoHide') === true) {
+              var duration = sudoNotify.getOption('duration');
               $('.countdown > span').html(duration);
               $('.countdown').fadeIn();
               $('select#timeout').attr('disabled', true);
@@ -72,19 +72,19 @@
         });
 
         $('.success').click(function(){
-          ppNotify.success('Great success!!!');
+          sudoNotify.success('Great success!!!');
         });
 
         $('.warning').click(function(){
-          ppNotify.warning('Somthing\'s ratteling!');
+          sudoNotify.warning('Somthing\'s ratteling!');
         });
 
         $('.error').click(function(){
-          ppNotify.error('Stop right now!!!');
+          sudoNotify.error('Stop right now!!!');
         });
 
         $('#animationType').change(function() {
-          ppNotify.setOption('animation', {
+          sudoNotify.setOption('animation', {
             type: $(this).val(),
             showSpeed: $.fn.sudoNotify.defaults.animation.showSpeed,
             hideSpeed: $.fn.sudoNotify.defaults.animation.hideSpeed
@@ -93,11 +93,11 @@
         
         $('#timeout').change(function() {
           if($(this).val() === '0') {
-            ppNotify.setOption('autoHide', false);
+            sudoNotify.setOption('autoHide', false);
           }
           else {
-            ppNotify.setOption('autoHide', true);
-            ppNotify.setOption('duration', $(this).val());
+            sudoNotify.setOption('autoHide', true);
+            sudoNotify.setOption('duration', $(this).val());
           }
         });
         
@@ -120,7 +120,7 @@
       <div class="notification-container"></div>
       <center>
         <br />
-        <h1>SudoNotify.js</h1>
+        <h1>jQuery Sudo Notify</h1>
         <br />
         <br />
         <label>Show callback notifications: </label>
