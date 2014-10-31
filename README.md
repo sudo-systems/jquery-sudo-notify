@@ -118,6 +118,7 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
 ## TODO
 
 1. Stop the scrollbars from appearing when a scroll or slide animation is in progress
+2. Add maxWidth parameter to the options. All though this can already be accomplished by applying the param to 'errorStyle', 'successStyle' and 'warningStyle', this isn't a very pretty solution.
 
 
 ## License
