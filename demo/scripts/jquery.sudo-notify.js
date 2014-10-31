@@ -10,13 +10,9 @@
     
     var wrapper = $('<div></div>');
     var messageContainer = $('<div></div>');
-    
     this.addClass('sudoNotify');
-    this.css(positionCss);
-    this.css('opacity', settings.opacity);
     wrapper.addClass('wrapper');
     messageContainer.addClass('message');
-    
     this.append(wrapper);
     wrapper.append(messageContainer);
     
@@ -25,7 +21,7 @@
       closeButtonContainer.addClass('close-button');
       wrapper.append(closeButtonContainer);
     }
- 
+
     this.error = function(message) {
       show('error', message);
     };
@@ -52,6 +48,13 @@
     }
     
     function show(messageType, message) {
+      element.css(positionCss);
+      element.css('opacity', settings.opacity);
+      
+      if(closeButtonContainer !== 'undefined' && !settings.showCloseButton) {
+        closeButtonContainer.hide();
+      }
+      
       if(element.is(':visible') && settings.animation.type !== 'none') {
         executeHide(function() {
           currentMessageType = messageType;
