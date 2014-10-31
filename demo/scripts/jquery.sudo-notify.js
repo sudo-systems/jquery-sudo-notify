@@ -11,17 +11,17 @@
     var cssPosition = this.parent().is('body')? 'fixed' : 'absolute';
     var messageContainer = $('<div></div>').addClass('message');
     var closeButtonContainer = $('<div></div>').addClass('close-button');
-    var wrapper = $('<div></div>').addClass('wrapper').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
-    this.addClass('sudoNotify').css('position', cssPosition).append(wrapper);
+    var wrapper = $('<div></div>').addClass('wrapper', 'sn-clearfix').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
+    this.addClass('sudoNotify', 'sn-clearfix').css('position', cssPosition).append(wrapper);
     closeButtonContainer.toggle(settings.showCloseButton);
     
     //Prepare parent element if required
     if(!this.parent().is('body')) {
-      if(this.parent().css('position') === 'undefined' ||$.trim(this.parent().css('position')) === '') {
+      if(this.parent().css('position') === 'undefined' || $.trim(this.parent().css('position')) === '' || $.trim(this.parent().css('position')) === 'static') {
         this.parent().css('position', 'relative');
       }
       
-      if(this.parent().css('overflow') === 'undefined' ||$.trim(this.parent().css('overflow')) === '') {
+      if(this.parent().css('overflow') === 'undefined' || $.trim(this.parent().css('overflow')) === '' || $.trim(this.parent().css('overflow')) === 'visible') {
         this.parent().css('overflow', 'hidden');
       }
     }
@@ -260,8 +260,7 @@
     log: true,
     opacity: 0.95,
     defaultStyle: {
-      maxWidth: '1200px',
-      fontSize: '16px'
+      maxWidth: '1200px'
     },
     errorStyle: {
       color: '#000000',
