@@ -6,20 +6,12 @@
     var timer = null;
     var element = this;
     var currentMessageType = '';
-    
-    var wrapper = $('<div></div>');
-    var messageContainer = $('<div></div>');
-    this.addClass('sudoNotify');
-    wrapper.addClass('wrapper');
-    messageContainer.addClass('message');
-    this.append(wrapper);
-    wrapper.append(messageContainer);
-    
-    if(settings.showCloseButton) {
-      var closeButtonContainer = $('<div></div>');
-      closeButtonContainer.addClass('close-button');
-      wrapper.append(closeButtonContainer);
-    }
+    var cssPosition = this.parent().is('body')? 'fixed' : 'relative';
+    var messageContainer = $('<div></div>').addClass('message');
+    var closeButtonContainer = $('<div></div>').addClass('close-button');
+    var wrapper = $('<div></div>').addClass('wrapper').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
+    this.addClass('sudoNotify').css('position', cssPosition).append(wrapper);
+    closeButtonContainer.toggle(settings.showCloseButton);
 
     this.error = function(message) {
       show('error', message);
@@ -42,22 +34,14 @@
     };
     
     function setClass(className) {
-      element.removeClass('error warning success');
-      element.addClass(className);
+      element.removeClass('error warning success').addClass(className);
     }
     
     function show(messageType, message) {
       var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
-      element.css(positionCss);
-      element.css('opacity', settings.opacity);
-      
-      if(closeButtonContainer !== 'undefined' && !settings.showCloseButton) {
-        closeButtonContainer.hide();
-      }
-      else {
-        closeButtonContainer.show();
-      }
-      
+      element.css(positionCss).css('opacity', settings.opacity);
+      closeButtonContainer.toggle(settings.showCloseButton);
+        
       if(element.is(':visible') && settings.animation.type !== 'none') {
         executeHide(function() {
           currentMessageType = messageType;
@@ -77,7 +61,6 @@
     function executeShow(messageType, message, callback) {
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
       clearTimeout(timer);
-      
       setClass(messageType);
       
       if(messageType === 'error') {
@@ -101,12 +84,8 @@
         }
         
         wrapper.css('opacity', 0.0);
-        element.css('left', initialPosition);
-        element.show();
-
-        var animationOptions = {
-          left: '0px'
-        };
+        element.css('left', initialPosition).show();
+        var animationOptions = {left: '0px'};
         
         if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
           animationOptions.opacity= settings.opacity;
@@ -126,8 +105,7 @@
         }
         
         wrapper.css('opacity', 0.0);
-        element.css(settings.position, '-'+element.height());
-        element.show();
+        element.css(settings.position, '-'+element.height()).show();
         
         var animationOptions = {};
         animationOptions[settings.position] = '0px';
@@ -168,10 +146,7 @@
       
       if(settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-left' || settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
         var targetPosition = (settings.animation.type === 'scroll-right' || settings.animation.type === 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
-        
-        var animationOptions = {
-          left: targetPosition
-        };
+        var animationOptions = {left: targetPosition};
         
         if(settings.animation.type === 'scroll-right-fade' || settings.animation.type === 'scroll-left-fade') {
           animationOptions.opacity= 0.0;
@@ -196,7 +171,6 @@
         }
 
         wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
-        
         element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
           function(){
             element.hide();
@@ -244,22 +218,12 @@
       var minute  = now.getMinutes();
       var second  = now.getSeconds(); 
       
-      if(month.toString().length === 1) {
-          var month = '0'+month;
-      }
-      if(day.toString().length === 1) {
-          var day = '0'+day;
-      }   
-      if(hour.toString().length === 1) {
-          var hour = '0'+hour;
-      }
-      if(minute.toString().length === 1) {
-          var minute = '0'+minute;
-      }
-      if(second.toString().length === 1) {
-          var second = '0'+second;
-      }   
-      
+      month = (month.toString().length === 1)? month = '0'+month : month;
+      day = (day.toString().length === 1)? day = '0'+day : day;
+      hour = (hour.toString().length === 1)? hour = '0'+hour : hour;
+      minute = (minute.toString().length === 1)? minute = '0'+minute : minute;
+      second = (second.toString().length === 1)? second = '0'+second : second;
+
       return day+'-'+month+'-'+year+' '+hour+':'+minute+':'+second;
   }
 
@@ -279,6 +243,10 @@
     position: 'top', //top or bottom
     log: true,
     opacity: 0.95,
+    defaultStyle: {
+      maxWidth: '1200px',
+      fontSize: '16px'
+    },
     errorStyle: {
       color: '#000000',
       backgroundColor: '#FF9494'
