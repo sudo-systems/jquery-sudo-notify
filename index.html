@@ -51,7 +51,7 @@
             
             if(sudoNotify.getOption('autoHide') === true) {
               clearInterval(countdown);
-              $('.countdown').slideUp('fast');
+              $('.countdown').hide();
               $('#timeout').attr('disabled', false);
             }
           },
@@ -62,23 +62,20 @@
  
             if(sudoNotify.getOption('autoHide') === true) {
               var duration = sudoNotify.getOption('duration');
-              $('.countdown > span').html(duration);
               $('#timeout').attr('disabled', true);
-              $('.countdown').slideDown('fast');
+              $('.countdown').html(duration).show();
               
               duration = duration-1;
               countdown = setInterval(function(){
                 if(duration === -1) {
                   clearInterval(countdown);
-                  $('.countdown').slideUp('fast', function() {
-                    $('#timeout').attr('disabled', false);
-                  });
-                  
-                  return;
+                  $('#timeout').attr('disabled', false);
+                  $('.countdown').hide();
                 }
-                
-                $('.countdown > span').html(duration);
-                duration--;
+                else {
+                  $('.countdown').html(duration);
+                  duration--;
+                }
               }, 1000);
             }
           }
@@ -152,8 +149,7 @@
       }
       .countdown {
         display: none;
-        line-height: 30px;
-        white-space: nowrap;
+        color: orange;
       }
       .notificationWithin > fieldset{
         position: relative;
@@ -234,7 +230,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-md-6 control-label" for="timeout">Hide notification after</label>
+              <label class="col-md-6 control-label" for="timeout">Hide notification after <span class="countdown"></span></label>
               <div class="col-md-4">
                 <select id="timeout" name="timeout" class="form-control">
                   <option value="0">Never</option>
@@ -246,7 +242,6 @@
                   <option value="20">20 seconds</option>
                   <option value="30">30 seconds</option>
                 </select>
-                <span class="countdown"><span></span> seconds remaining</span>
               </div>
             </div>
             <div class="form-group">
