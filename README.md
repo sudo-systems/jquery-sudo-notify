@@ -8,28 +8,30 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
 1. Include plugin's css:
 
 	```html
-	<link rel="stylesheet" type="text/css" href="style/jquery.sudo-notify.min.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/sudo-systems/jquery-sudo-notify/master/dist/style/jquery.sudo-notify.min.css" />
 	```
 
-2. Include jQuery:
+2. Donwload the plugin, extract it and place the directory "dist/images/" in the root of your web application (or use the downloaded css file and modify the image paths).
+
+3. Include jQuery:
 
 	```html
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	```
 
-3. Include plugin's code:
+4. Include plugin's code:
 
 	```html
-	<script type="text/javascript" src="scripts/jquery.sudo-notify.min.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/sudo-systems/jquery-sudo-notify/master/dist/jquery.sudo-notify.min.js"></script>
 	```
 
-4. Add html element to the body:
+5. Add html element to the body:
 
 	```html
 	<div id="notificationContainer"></div>
 	```
 
-4. Call the plugin (with default configuration):
+6. Call the plugin (with default configuration):
 
 	```javascript
 	$(document).ready(function(){
@@ -41,7 +43,7 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
     });
     ```
 
-5. OPTIONAL: Call plugin with custom configuration (all attributes are optional)
+7. OPTIONAL: Call plugin with custom configuration (all attributes are optional)
 
     ```javascript
     $(document).ready(function(){
@@ -83,7 +85,7 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
     });
 	```
 
-5. OPTIONAL: Or overwrite the default configuration before initiating the plugin (all attributes are optional)
+8. OPTIONAL: Or overwrite the default configuration before initiating the plugin (all attributes are optional)
 
     ```javascript
     $.fn.sudoNotify.defaults = {
