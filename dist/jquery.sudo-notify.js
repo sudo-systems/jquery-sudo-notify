@@ -6,13 +6,27 @@
     var timer = null;
     var element = this;
     var currentMessageType = '';
+    
+    //Compose DOM elements and append to container element
     var cssPosition = this.parent().is('body')? 'fixed' : 'absolute';
     var messageContainer = $('<div></div>').addClass('message');
     var closeButtonContainer = $('<div></div>').addClass('close-button');
     var wrapper = $('<div></div>').addClass('wrapper').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
     this.addClass('sudoNotify').css('position', cssPosition).append(wrapper);
     closeButtonContainer.toggle(settings.showCloseButton);
+    
+    //Prepare parent element if required
+    if(!this.parent().is('body')) {
+      if(this.parent().css('position') === 'undefined' ||$.trim(this.parent().css('position')) === '') {
+        this.parent().css('position', 'relative');
+      }
+      
+      if(this.parent().css('overflow') === 'undefined' ||$.trim(this.parent().css('overflow')) === '') {
+        this.parent().css('overflow', 'hidden');
+      }
+    }
 
+    //Public methods
     this.error = function(message) {
       show('error', message);
     };
@@ -33,6 +47,7 @@
       return settings[key];
     };
     
+    //Private methods
     function setClass(className) {
       element.removeClass('error warning success').addClass(className);
     }
@@ -209,6 +224,7 @@
       executeHide();
     });
     
+    //Helper methods
     function getDateTime() {
       var now     = new Date(); 
       var year    = now.getFullYear();
