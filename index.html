@@ -114,9 +114,21 @@
         $('input[name=showCallbackNotifications]:radio').change(function() {
           showCallbackNotifications = ($(this).val() === '1');
         });
+        
+        $('input[name=position]:radio').change(function() {
+          sudoNotify.setOption('position', $(this).val());
+        });
+        
+        $('input[name=showCloseButton]:radio').change(function() {
+          sudoNotify.setOption('showCloseButton', ($(this).val() ==='1'));
+        });
       });
     </script>
     <style>
+      html,
+      body {
+        font-size: 14px !important;
+      }
       .countdown {
         display: none;
       }
@@ -144,9 +156,19 @@
         </h3>
         <br />
         <br />
+        <label>Show close button: </label>
+        <input type="radio" name="showCloseButton" value="1" checked="checked" /> yes
+        <input type="radio" name="showCloseButton" value="0" /> no
+        <br />
+        <br />
+        <label>Top or bottom?: </label>
+        <input type="radio" name="position" value="top" checked="checked" /> top
+        <input type="radio" name="position" value="bottom" /> bottom
+        <br />
+        <br />
         <label>Show callback notifications: </label>
-        yes <input type="radio" name="showCallbackNotifications" value="1" />
-        no <input type="radio" name="showCallbackNotifications" value="0" checked="checked" />
+        <input type="radio" name="showCallbackNotifications" value="1" /> yes
+        <input type="radio" name="showCallbackNotifications" value="0" checked="checked" /> no
         <br />
         <br />
         <label for="timeout">Hide notification after: </label>
