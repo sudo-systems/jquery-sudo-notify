@@ -41,6 +41,7 @@
             if(ppNotify.getOption('autoHide') === true) {
               clearInterval(countdown);
               $('.countdown').fadeOut();
+              $('select#timeout').attr('disabled', false);
             }
           },
           onShow: function(notificationType) {
@@ -52,13 +53,17 @@
               var duration = ppNotify.getOption('duration');
               $('.countdown > span').html(duration);
               $('.countdown').fadeIn();
+              $('select#timeout').attr('disabled', true);
 
               duration = duration-1;
               countdown = setInterval(function(){
                 if(duration === -1) {
                   clearInterval(countdown);
                   $('.countdown').fadeOut();
+                  $('select#timeout').attr('disabled', false);
+                  return;
                 }
+                
                 $('.countdown > span').html(duration);
                 duration--;
               }, 1000);
@@ -88,10 +93,10 @@
         
         $('#timeout').change(function() {
           if($(this).val() === '0') {
-            ppNotify.setOption('autohide', false);
+            ppNotify.setOption('autoHide', false);
           }
           else {
-            ppNotify.setOption('autohide', true);
+            ppNotify.setOption('autoHide', true);
             ppNotify.setOption('duration', $(this).val());
           }
           
@@ -119,13 +124,11 @@
   </head>
   <body>
       <div class="notification-container"></div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
       <center>
+        <br />
+        <h1>SudoNotify.js</h1>
+        <br />
+        <br />
         <label>Show callback notifications: </label>
         yes <input type="radio" name="showCallbackNotifications" value="1" />
         no <input type="radio" name="showCallbackNotifications" value="0" checked="checked" />

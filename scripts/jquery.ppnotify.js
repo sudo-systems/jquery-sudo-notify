@@ -106,11 +106,11 @@
           animationOptions.opacity= settings.opacity;
         }
 
-        element.stop().animate(animationOptions, settings.animation.showSpeed, 
+        element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
           function() {
             settings.onShow(currentMessageType);
             callback();
-            wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+            wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3));
           }
         );
       }
@@ -131,21 +131,21 @@
           animationOptions.opacity= settings.opacity;
         }
         
-        element.stop().animate(animationOptions, settings.animation.showSpeed, 
+        element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
           function() {
             settings.onShow(currentMessageType);
             callback();
-            wrapper.stop().animate({opacity:1.0}, (settings.animation.showSpeed/3));
+            wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3));
           }
         );
       }
       else if(settings.animation.type === 'fade') {
-        element.fadeIn(
-          settings.animation.showSpeed, 
+        element.fadeIn(parseInt(settings.animation.showSpeed), 
           function() {
             settings.onShow(currentMessageType);
             callback();
-          });
+          }
+        );
       }
       else {
         element.show();
@@ -172,7 +172,7 @@
           animationOptions.opacity= 0.0;
         }
         
-        element.stop().animate(animationOptions, settings.animation.hideSpeed, 
+        element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
           function(){
             element.hide();
             settings.onClose(currentMessageType);
@@ -180,7 +180,7 @@
           }
         );
         
-        wrapper.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+        wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
       }
       else if(settings.animation.type === 'slide' || settings.animation.type === 'slide-fade') {
         var animationOptions = {
@@ -191,9 +191,9 @@
           animationOptions.opacity= 0.0;
         }
         
-        wrapper.stop().animate({opacity:0.0}, (settings.animation.hideSpeed/2));
+        wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
         
-        element.stop().animate(animationOptions, settings.animation.hideSpeed, 
+        element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
           function(){
             element.hide();
             settings.onClose(currentMessageType);
@@ -202,13 +202,13 @@
         );
       }
       else if(settings.animation.type === 'fade') {
-        element.fadeOut(
-          settings.animation.hideSpeed,
+        element.fadeOut(parseInt(settings.animation.hideSpeed),
           function() {
             settings.onClose(currentMessageType);
             callback();
             currentMessageType = '';
-          });
+          }
+        );
       }
       else {
         element.hide();
@@ -222,7 +222,7 @@
         clearTimeout(timer);
         timer = setTimeout(function() {
           executeHide();
-        }, (settings.duration*1000));
+        }, (parseInt(settings.duration)*1000));
       }
     }
     
