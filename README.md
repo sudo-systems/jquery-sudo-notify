@@ -3,6 +3,11 @@
 Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notify/) that demonstrates some of the plugin's functionality
 
 
+## Updates
+
+The current version is 0.2.0 (november 1st 2014)
+
+
 ## Description
 
 A jQuery plugin that allows you to create fully customisable notifications with very little effort.

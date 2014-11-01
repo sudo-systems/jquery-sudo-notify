@@ -8,7 +8,7 @@
         "notification",
 		"plugins"
 	],
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"author": {
 		"name": "Bram van Oploo",
 		"email": "bram@sudo-systems.com",
@@ -23,8 +23,8 @@
 	],
 	"licenses": [
 		{
-			"type": "MIT",
-			"url": "http://zenorocha.mit-license.org/"
+			"type": "BSD",
+			"url": "https://github.com/sudo-systems/jquery-sudo-notify/blob/master/LICENSE.md"
 		}
 	],
 	"bugs": "https://github.com/sudo-systems/jquery-sudo-notify/issues",
