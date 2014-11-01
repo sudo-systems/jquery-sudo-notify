@@ -47,6 +47,10 @@
       return settings[key];
     };
     
+    this.close = function() {
+      executeHide();
+    };
+    
     //Private methods
     function setClass(className) {
       element.removeClass('error warning success').addClass(className);
@@ -167,6 +171,7 @@
           animationOptions.opacity= 0.0;
         }
 
+        wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
         element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
           function(){
             element.hide();
@@ -174,8 +179,6 @@
             callback();
           }
         );
-        
-        wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
       }
       else if(settings.animation.type === 'slide' || settings.animation.type === 'slide-fade') {
         var animationOptions = {};

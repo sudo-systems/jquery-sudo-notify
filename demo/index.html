@@ -55,8 +55,8 @@
             
             if(sudoNotify.getOption('autoHide') === true) {
               clearInterval(countdown);
-              $('.countdown').hide();
-              $('#timeout').attr('disabled', false);
+              $('#countdown').html('0');
+              $('#closeButton').hide();
             }
           },
           onShow: function(notificationType) {
@@ -66,18 +66,18 @@
  
             if(sudoNotify.getOption('autoHide') === true) {
               var duration = sudoNotify.getOption('duration');
-              $('#timeout').attr('disabled', true);
-              $('.countdown').html(duration).show();
+              $('#countdown').html(duration);
+              $('#closeButton').show();
               
               duration = duration-1;
               countdown = setInterval(function(){
                 if(duration === -1) {
+                  $('#countdown').html('0');
+                  $('#closeButton').hide();
                   clearInterval(countdown);
-                  $('#timeout').attr('disabled', false);
-                  $('.countdown').hide();
                 }
                 else {
-                  $('.countdown').html(duration);
+                  $('#countdown').html(duration);
                   duration--;
                 }
               }, 1000);
@@ -95,6 +95,10 @@
 
         $('#errorButton').click(function(){
           sudoNotify.error('Stop right now!!!');
+        });
+        
+        $('#closeButton').click(function(){
+          sudoNotify.close();
         });
 
         $('#animationType').change(function() {
@@ -129,8 +133,15 @@
         
         //Notifications within container
         var sudoNotify2 = $('.notification-container-2').sudoNotify({
+          autoHide: false,
           animation: {
             type: 'scroll-left-fade'
+          },
+          onShow: function() {
+            $('#closeButton-2').show();
+          },
+          onClose: function() {
+            $('#closeButton-2').hide();
           }
         });
         
@@ -145,6 +156,10 @@
         $('#errorButton-2').click(function(){
           sudoNotify2.error('Stop right now!!!');
         });
+        
+        $('#closeButton-2').click(function(){
+          sudoNotify2.close();
+        });
       });
     </script>
     <style>
@@ -155,6 +170,9 @@
       .countdown {
         display: none;
         color: orange;
+      }
+      header {
+        text-align: center;
       }
       header > h1 {
         font-size: 38px;
@@ -167,14 +185,13 @@
         line-height: 34px;
       }
       header ul {
-        width: 100%;
-        margin-bottom: 30px;
+        margin: 0px auto 30px auto;
+        white-space: nowrap;
       }
       header li {
         display: inline-block;
         list-style: none;
-        width: 33%;
-        text-align: center;
+        padding: 0 10px 0 10px;
       }
       header h1 img {
         border-radius: 5px;
@@ -208,14 +225,12 @@
     <div class="notification-container"></div>
     <div class="wrapper">
       <header>
-        <h1 class="center">
-           <a href="http://sudo-systems.com" class="logo" title="Visit my webpage!" target="_blank"><img src="https://avatars3.githubusercontent.com/u/278582?v=2&s=90" alt="" /></a> 
-           Sudo Notify <span class="dim"> | a responsive jQuery plugin by sudo-systems.com </span>
+        <h1>
+          <a href="http://sudo-systems.com" class="logo" title="Visit my webpage!" target="_blank"><img src="https://avatars3.githubusercontent.com/u/278582?v=2&s=90" alt="" /></a> 
+          Sudo Notify <span class="dim">
+          <br /> 
+          a responsive jQuery plugin by <a href="http://sudo-systems.com" title="">sudo-systems.com</a></span>
         </h1>
-        <div class="center">
-          A responsive jQuery plugin for displaying notifications with animation options, developed by <a href="http://sudo-systems.com" title="Visit my website!" target="_blank">Sudo Systems</a>
-        </div>.
-        <br />
         <ul>
           <li><a href="https://github.com/sudo-systems/jquery-sudo-notify/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/sudo-systems/jquery-sudo-notify/tarball/master">Download <strong>TAR Ball</strong></a></li>
@@ -260,7 +275,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="col-md-6 control-label" for="timeout">Hide notification after <span class="countdown"></span></label>
+              <label class="col-md-6 control-label" for="timeout">Hide notification after</label>
               <div class="col-md-3">
                 <select id="timeout" name="timeout" class="form-control">
                   <option value="0">Never</option>
@@ -294,6 +309,8 @@
               <button id="successButton" name="successButton" class="btn btn-success">Show success</button>
               <button id="warningButton" name="warningButton" class="btn btn-warning">Show warning</button>
               <button id="errorButton" name="errorButton" class="btn btn-danger">Show error</button>
+              <br />
+              <button id="closeButton" name="closeButton" class="btn" style="margin-top:10px; display:none;">Close (<span id="countdown"></span> seconds remaining)</button>
             </div>
 
           </fieldset>
@@ -316,8 +333,8 @@
               <button id="successButton-2" name="successButton-2" class="btn btn-success">Show success</button>
               <button id="warningButton-2" name="warningButton-2" class="btn btn-warning">Show warning</button>
               <button id="errorButton-2" name="errorButton-2" class="btn btn-danger">Show error</button>
+              <button id="closeButton-2" name="closeButton-2" class="btn" style="display:none;">Close</button>
             </div>
-
           </fieldset>
         </div>
       </section>
