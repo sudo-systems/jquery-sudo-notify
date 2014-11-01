@@ -77,7 +77,10 @@ String.prototype.isIn = function() {
       element.css(settings[messageType+'Style']);
       messageContainer.html(message);
 
-      if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
+      if(settings.animation.type === 'expand') {
+        expandIn(callback);
+      }
+      else if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
         scrollIn(callback);
       }
       else if(settings.animation.type.isIn('slide', 'slide-fade') ) {
@@ -99,7 +102,10 @@ String.prototype.isIn = function() {
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
       clearTimeout(timer);
       
-      if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
+      if(settings.animation.type === 'expand') {
+        expandOut(callback);
+      }
+      else if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
         scrollOut(callback);
       }
       else if(settings.animation.type.isIn('slide', 'slide-fade')) {
@@ -123,6 +129,48 @@ String.prototype.isIn = function() {
     }
     
     //Animations
+    function expandIn(callback) {
+      var initialPosition = (element.parent().width()/2)+'px';
+      var targetPostion = '0px';
+      
+      wrapper.css('opacity', 0.0).css('overflow', 'hidden');
+      element.css('height', element.height()+'px').css('width', '0%').css('left', initialPosition).show();
+      
+      var animationOptions = {
+        left: targetPostion,
+        width: '100%'
+      };
+      
+      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
+        function() {
+          settings.onShow(currentMessageType);
+          callback();
+          wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3)).css('overflow', 'visible');
+          element.css('height', 'auto');
+        }
+      );
+    }
+    
+    function expandOut(callback) {
+      var targetPosition = (element.parent().width()/2)+'px';
+      var animationOptions = {
+        left: targetPosition,
+        width: '0%'
+      };
+      
+      element.css('height', element.height()+'px');
+      
+      wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.showSpeed)/3));
+      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
+        function() {
+          settings.onClose(currentMessageType);
+          callback();
+          element.hide();
+          element.css('height', 'auto')
+        }
+      );
+    }
+    
     function scrollIn(callback) {
       var initialPosition = settings.animation.type.isIn('scroll-right', 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
         
@@ -154,13 +202,14 @@ String.prototype.isIn = function() {
       if(settings.animation.type.isIn('scroll-right-fade', 'scroll-left-fade')) {
         animationOptions.opacity= 0.0;
       }
-
+      
       wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
       element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
         function(){
           element.hide();
           settings.onClose(currentMessageType);
           callback();
+          element.hide();
         }
       );
     }

@@ -14,13 +14,14 @@ header > h1 {
   margin-bottom: 50px;
   padding: 0px;
 }
-header h1 span.dim {
+header span.dim {
   font-size: 18px;
   color: #AAA;
   line-height: 34px;
 }
 header ul {
-  margin: 0px auto 30px auto;
+  padding: 20px 0 20px 0;
+  border-top: 2px dotted #FFF;
   white-space: nowrap;
 }
 header li {
