@@ -155,7 +155,7 @@ String.prototype.isIn = function() {
       var initialPosition = (parentElement.width()/2)+'px';
       var targetPostion = '0px';
       
-      wrapper.height('0px').css('opacity', 0.0);
+      wrapper.css('whiteSpace', 'nowrap').css('opacity', 0.0);
       element.css('width', '0%').css('left', initialPosition).show();
       
       var animationOptions = {
@@ -167,7 +167,7 @@ String.prototype.isIn = function() {
         function() {
           settings.onShow(currentMessageType);
           callback();
-          wrapper.stop().height('auto').animate({opacity:1.0}, wrapperFadeSpeed);
+          wrapper.stop().css('whiteSpace', 'normal').animate({opacity:1.0}, wrapperFadeSpeed);
         }
       );
     }
