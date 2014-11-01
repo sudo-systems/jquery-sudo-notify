@@ -155,4 +155,4 @@ The configuration options are explained below.
 
 ## License
 
-[MIT License](http://zenorocha.mit-license.org/) © Bram van Oploo / http://sudo-systems.com
+[MIT License](http://zenorocha.mit-license.org/) © Bram van Oploo / [http://sudo-systems.com](Sudo Systems)
