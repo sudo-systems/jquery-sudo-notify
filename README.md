@@ -3,6 +3,22 @@
 Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notify/) that demonstrates some of the plugin's functionality
 
 
+## Description
+
+A jQuery plugin that allows you to create fully customisable notifications with very little effort.
+Multiple instances can be added to one page without conflicts. 
+You can add a notifications directly to the body and on the same page create anonther instances in i.e. a div or any other DOM element for that matter.
+The plugin will automatically prepare the parent element to fit the needs for proper usage within that element. 
+
+The available public methods per instance are:
+1. showError('error message')
+2. showSuccess('success message')
+3. showWarning('warning message')
+4. close()
+
+The configuration options are explained below.
+
+
 ## Usage
 
 1. Include plugin's css:
@@ -40,6 +56,7 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
       sudoNotify.success('Some success message');
       sudoNotify.warning('Some warning');
       sudoNotify.error('Some error');
+      sudoNotify.close();
     });
     ```
 
