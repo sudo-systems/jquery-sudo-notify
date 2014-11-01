@@ -17,6 +17,11 @@ The available public methods per instance are:
 3. showWarning('warning message')
 4. close()
 
+Event callback options are:
+
+1. onClose
+2. onShow
+
 The configuration options are explained below.
 
 
