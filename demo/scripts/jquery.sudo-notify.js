@@ -20,33 +20,54 @@ String.prototype.isIn = function() {
     var timer = null;
     var element = this;
     var currentMessageType = '';
-    var cssPosition, messageContainer, closeButtonContainer, wrapper;
+    var wrapperFadeSpeed, elementShowSpeed, elementHideSpeed, cssPosition, iconContainer, messageContainer, closeButtonContainer, wrapper, parentElement;
 
     init();
 
     //Private methods
     function init() {
-      cssPosition = element.parent().is('body')? 'fixed' : 'absolute';
-      messageContainer = $('<div></div>').addClass('message');
-      closeButtonContainer = $('<div></div>').addClass('close-button');
-      wrapper = $('<div></div>').addClass('wrapper', 'sn-clearfix').css(settings.defaultStyle).append(messageContainer, closeButtonContainer);
-      
-      element.addClass('sudoNotify', 'sn-clearfix').css('position', cssPosition).append(wrapper);
-      closeButtonContainer.toggle(settings.showCloseButton);
+      parentElement = element.parent();
+      elementShowSpeed = parseInt(settings.animation.showSpeed);
+      elementHideSpeed = parseInt(settings.animation.hideSpeed);
+      wrapperFadeSpeed = (elementShowSpeed/3);
+      cssPosition = parentElement.is('body')? 'fixed' : 'absolute';
+      iconContainer = $('<div></div>')
+        .addClass('icon fa clearfix')
+        .css('fontSize', settings.defaultStyle.fontSize);
+      messageContainer = $('<div></div>')
+        .addClass('message clearfix');
+      closeButtonContainer = $('<div></div>')
+        .addClass('close-button fa fa-times clearfix');
+      wrapper = $('<div></div>')
+        .addClass('wrapper clearfix')
+        .css(settings.defaultStyle)
+        .append(iconContainer, messageContainer, closeButtonContainer);
+      element
+        .addClass('sudoNotify clearfix')
+        .css('position', cssPosition)
+        .append(wrapper);
 
-      if(!element.parent().is('body')) {
-        if(element.parent().css('position').isIn('', 'static')){
-          element.parent().css('position', 'relative');
+      if(!parentElement.is('body')) {
+        if(parentElement.css('position').isIn('', 'static')){
+          parentElement.css('position', 'relative');
         }
 
-        if(element.parent().css('overflow').isIn('', 'visible')){
-          element.parent().css('overflow', 'hidden');
+        if(parentElement.css('overflow').isIn('', 'visible')){
+          parentElement.css('overflow', 'hidden');
         }
       }
     }
 
-    function setClass(className) {
-      element.removeClass('error warning success').addClass(className);
+    function setIcon(messageType) {
+      if(messageType === 'success'){
+        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-check');
+      }
+      else if(messageType === 'warning'){
+        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-exclamation-triangle');
+      }
+      else if(messageType === 'error'){
+        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-ban');
+      }
     }
     
     function show(messageType, message) {
@@ -73,10 +94,11 @@ String.prototype.isIn = function() {
     function executeShow(messageType, message, callback) {
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
       clearTimeout(timer);
-      setClass(messageType);
       element.css(settings[messageType+'Style']);
       messageContainer.html(message);
-
+      closeButtonContainer.css('color', settings[messageType+'Style'].color);
+      setIcon(messageType);
+      
       if(settings.animation.type === 'expand') {
         expandIn(callback);
       }
@@ -130,43 +152,43 @@ String.prototype.isIn = function() {
     
     //Animations
     function expandIn(callback) {
-      var initialPosition = (element.parent().width()/2)+'px';
+      var initialPosition = (parentElement.width()/2)+'px';
       var targetPostion = '0px';
       
-      wrapper.css('opacity', 0.0).css('overflow', 'hidden');
-      element.css('height', element.height()+'px').css('width', '0%').css('left', initialPosition).show();
+      wrapper.height('0px').css('opacity', 0.0);
+      element.css('width', '0%').css('left', initialPosition).show();
       
       var animationOptions = {
         left: targetPostion,
         width: '100%'
       };
-      
-      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
+
+      element.stop().animate(animationOptions, elementShowSpeed, 
         function() {
           settings.onShow(currentMessageType);
           callback();
-          wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3)).css('overflow', 'visible');
-          element.css('height', 'auto');
+          wrapper.stop().height('auto').animate({opacity:1.0}, wrapperFadeSpeed);
         }
       );
     }
     
     function expandOut(callback) {
-      var targetPosition = (element.parent().width()/2)+'px';
+      var targetPosition = (parentElement.width()/2)+'px';
       var animationOptions = {
         left: targetPosition,
         width: '0%'
       };
+
+      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed, function() {
+        $(this).hide();
+      });
       
-      element.css('height', element.height()+'px');
-      
-      wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.showSpeed)/3));
-      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
-        function() {
+      element.stop().animate(animationOptions, elementHideSpeed, 
+        function(){
+          element.hide();
+          wrapper.show();
           settings.onClose(currentMessageType);
           callback();
-          element.hide();
-          element.css('height', 'auto')
         }
       );
     }
@@ -186,11 +208,11 @@ String.prototype.isIn = function() {
         animationOptions.opacity= settings.opacity;
       }
 
-      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
+      element.stop().animate(animationOptions, elementShowSpeed, 
         function() {
           settings.onShow(currentMessageType);
           callback();
-          wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3));
+          wrapper.stop().animate({opacity:1.0}, wrapperFadeSpeed);
         }
       );
     }
@@ -203,13 +225,12 @@ String.prototype.isIn = function() {
         animationOptions.opacity= 0.0;
       }
       
-      wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
-      element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
+      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed);
+      element.stop().animate(animationOptions, elementHideSpeed, 
         function(){
           element.hide();
           settings.onClose(currentMessageType);
           callback();
-          element.hide();
         }
       );
     }
@@ -229,11 +250,11 @@ String.prototype.isIn = function() {
         animationOptions['opacity'] = settings.opacity;
       }
 
-      element.stop().animate(animationOptions, parseInt(settings.animation.showSpeed), 
+      element.stop().animate(animationOptions, elementShowSpeed, 
         function() {
           settings.onShow(currentMessageType);
           callback();
-          wrapper.stop().animate({opacity:1.0}, (parseInt(settings.animation.showSpeed)/3));
+          wrapper.stop().animate({opacity:1.0}, wrapperFadeSpeed);
         }
       );
     }
@@ -246,8 +267,8 @@ String.prototype.isIn = function() {
         animationOptions['opacity'] = 0.0;
       }
 
-      wrapper.stop().animate({opacity:0.0}, (parseInt(settings.animation.hideSpeed)/2));
-      element.stop().animate(animationOptions, parseInt(settings.animation.hideSpeed), 
+      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed);
+      element.stop().animate(animationOptions, elementHideSpeed, 
         function(){
           element.hide();
           settings.onClose(currentMessageType);
@@ -257,7 +278,7 @@ String.prototype.isIn = function() {
     }
     
     function fadeIn(callback) {
-      element.fadeIn(parseInt(settings.animation.showSpeed), 
+      element.fadeIn(elementShowSpeed, 
         function() {
           settings.onShow(currentMessageType);
           callback();
@@ -266,7 +287,7 @@ String.prototype.isIn = function() {
     }
     
     function fadeOut(callback) {
-      element.fadeOut(parseInt(settings.animation.hideSpeed),
+      element.fadeOut(elementHideSpeed,
         function() {
           settings.onClose(currentMessageType);
           callback();
@@ -354,7 +375,8 @@ String.prototype.isIn = function() {
     log: true,
     opacity: 0.95,
     defaultStyle: {
-      maxWidth: '1200px'
+      maxWidth: '1200px',
+      fontSize: '16px'
     },
     errorStyle: {
       color: '#000000',

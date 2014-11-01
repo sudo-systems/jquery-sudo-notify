@@ -1,18 +1,3 @@
-.sn-clearfix {
-  *zoom: 1;
-}
-
-.sn-clearfix:before,
-.sn-clearfix:after {
-  display: table;
-  line-height: 0;
-  content: "";
-}
-
-.sn-clearfix:after {
-  clear: both;
-}
-
 .sudoNotify {
   font-family:inherit;
   position: fixed;
@@ -22,40 +7,31 @@
   width: 100%;
   z-index: 999;
   overflow: hidden;
-}
-
-.sudoNotify.error > .wrapper > .message {
-  background: transparent url('../images/icon_error.png') no-repeat 10px center;
-}
-
-.sudoNotify.warning > .wrapper > .message {
-  background: transparent url('../images/icon_warning.png') no-repeat 10px center;
-}
-
-.sudoNotify.success > .wrapper > .message {
-  background: transparent url('../images/icon_success.png') no-repeat 10px center;
+  white-space: nowrap;
 }
 
 .sudoNotify > .wrapper {
   display: inline-block;
-  margin: 2px 0px 2px 0px;
   width: 100%;
   text-align: left;
   position: relative;
+  padding-top: 1.5%;
+  padding-bottom: 1.5%;
+}
+
+.sudoNotify > .wrapper > .icon {
+  line-height: inherit;
+  float: left;
+  margin: 0 15px 0 10px;
 }
 
 .sudoNotify > .wrapper > .message {
-  display: inline-block;
-  padding: 1.5% 0 1.5% 50px;
+  float: left;
 }
 
 .sudoNotify > .wrapper > .close-button {
-  position: absolute;
-  top: 0px;
-  right: 10px;
-  bottom: 0px;
-  display: inline-block;
-  width: 35px;
+  float: right;
   cursor: pointer;
-  background: transparent url('../images/icon_close.png') no-repeat center center;
+  line-height: inherit;
+  margin: 0 10px 0 0px;
 }
