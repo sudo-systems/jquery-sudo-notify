@@ -11,6 +11,7 @@ You can add a notifications directly to the body and on the same page create ano
 The plugin will automatically prepare the parent element to fit the needs for proper usage within that element. 
 
 The available public methods per instance are:
+
 1. showError('error message')
 2. showSuccess('success message')
 3. showWarning('warning message')
