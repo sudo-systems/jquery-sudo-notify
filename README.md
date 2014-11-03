@@ -5,7 +5,12 @@ Take a look at the simple [demo](http://sudo-systems.github.io/jquery-sudo-notif
 
 ## Updates
 
-The current version is 0.2.0 (november 1st 2014)
+The current version is 0.2.5 (november 3th 2014)
+
+* Major code improvements
+* Added 'expand' animation (work in progress)
+* Added 'positionType' parameter to allow for relative positioning  within container other then body (which pushes contend down or up on show)
+* Added parameter 'verticalMargin' to allow for margin at the top or bottom while using a fixed or absolute position 
 
 
 ## Description
@@ -80,27 +85,29 @@ The configuration options are explained below.
         showCloseButton: true,
         duration: 6, //seconds
         position: 'top', //top or bottom
-        log: true, //log all messages to console with timestamp
+        positionType: 'absolute', //absolute, relative or fixed. Only applies if the elemnt's parent isn't the body. Otherwise it will always be fixed
+        verticalMargin: '0px', //Doesn't work if positionType is 'relative'
+        log: true,
         opacity: 0.95,
         defaultStyle: {
-          maxWidth: '1000px',
+          maxWidth: '1200px',
           fontSize: '16px'
         },
-        errorStyle: { //allows for all possible css options
+        errorStyle: {
           color: '#000000',
           backgroundColor: '#FF9494'
         },
-        warningStyle: { //allows for all possible css options
+        warningStyle: {
           color: '#000000',
           backgroundColor: '#FFFF96'
         },
-        successStyle: { //allows for all possible css options
+        successStyle: {
           color: '#000000',
           backgroundColor: '#B8FF6D'
         },
         animation: {
-          type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
-          showSpeed: 400,
+          type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none, expand
+          showSpeed: 400 ,
           hideSpeed: 250
         },
         onClose: function(notificationType) {
@@ -119,12 +126,14 @@ The configuration options are explained below.
     $.fn.sudoNotify.defaults = {
       autoHide: true,
       showCloseButton: true,
-      duration: 5, //seconds
+      duration: 6, //seconds
       position: 'top', //top or bottom
+      positionType: 'absolute', //absolute, relative or fixed. Only applies if the elemnt's parent isn't the body. Otherwise it will always be fixed
+      verticalMargin: '0px', //Doesn't work if positionType is 'relative'
       log: true,
       opacity: 0.95,
-`     defaultStyle: {
-        maxWidth: '1000px',
+      defaultStyle: {
+        maxWidth: '1200px',
         fontSize: '16px'
       },
       errorStyle: {
@@ -140,7 +149,7 @@ The configuration options are explained below.
         backgroundColor: '#B8FF6D'
       },
       animation: {
-        type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+        type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none, expand
         showSpeed: 400 ,
         hideSpeed: 250
       },

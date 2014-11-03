@@ -379,10 +379,10 @@ String.prototype.isIn = function() {
   $.fn.sudoNotify.defaults = {
     autoHide: true,
     showCloseButton: true,
-    duration: 5, //seconds
+    duration: 6, //seconds
     position: 'top', //top or bottom
-    positionType: 'absolute',
-    verticalMargin: '0px',
+    positionType: 'absolute', //absolute, relative or fixed. Only applies if the elemnt's parent isn't the body. Otherwise it will always be fixed
+    verticalMargin: '0px', //Doesn't work if positionType is 'relative'
     log: true,
     opacity: 0.95,
     defaultStyle: {
@@ -402,7 +402,7 @@ String.prototype.isIn = function() {
       backgroundColor: '#B8FF6D'
     },
     animation: {
-      type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none
+      type: 'slide-fade', //fade, scroll-left, scroll-left-fade, scroll-right, scroll-right-fade, slide, slide-fade or none, expand
       showSpeed: 400 ,
       hideSpeed: 250
     },
