@@ -11,6 +11,7 @@ The current version is 0.2.5 (november 3th 2014)
 * Added 'expand' animation (work in progress)
 * Added 'positionType' parameter to allow for relative positioning  within container other then body (which pushes contend down or up on show)
 * Added parameter 'verticalMargin' to allow for margin at the top or bottom while using a fixed or absolute position 
+* Switched to the awsome [Font Awsome](http://fortawesome.github.io/Font-Awesome/) for the icons. This allows for better quality scaling and for icon colors to be changed by parameters (work in progress)
 
 
 ## Description
