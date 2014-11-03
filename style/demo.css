@@ -1,0 +1,57 @@
+body {
+  background-color: #EFEFEF;
+  padding: 1% 3% 3% 3%;
+}
+.countdown {
+  display: none;
+  color: orange;
+}
+header {
+  text-align: center;
+}
+header > h1 {
+  font-size: 38px;
+  margin-bottom: 50px;
+  padding: 0px;
+}
+header span.dim {
+  font-size: 18px;
+  color: #AAA;
+  line-height: 34px;
+}
+header ul {
+  padding: 20px 0 20px 0;
+  border-top: 2px dotted #FFF;
+  white-space: nowrap;
+}
+header li {
+  display: inline-block;
+  list-style: none;
+  padding: 0 10px 0 10px;
+}
+header h1 img {
+  border-radius: 5px;
+  border: 4px solid #FFF;
+  width: 90px;
+  margin-right: 15px;
+}
+section {
+  background-color: #FFF;
+  padding: 1% 3% 2% 3%;
+  border-radius: 10px;
+}
+header,
+section,
+footer {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+}
+.center {
+  text-align: center;
+}
+.form-group.buttons {
+  display: block !important;
+  text-align: center;
+  width: 100%;
+}
