@@ -116,6 +116,7 @@ $(document).ready(function(){
   //Notifications within container
   var sudoNotify2 = $('.notification-container-2').sudoNotify({
     autoHide: false,
+    verticalMargin: '31px',
     animation: {
       type: 'scroll-left-fade'
     },

@@ -1,4 +1,4 @@
-.sudoNotify {
+.sn {
   font-family:inherit;
   position: fixed;
   left: 0;
@@ -7,29 +7,27 @@
   width: 100%;
   z-index: 999;
   overflow: hidden;
-  white-space: nowrap;
 }
 
-.sudoNotify > .wrapper {
+.sn > .sn-wrapper {
   display: inline-block;
   width: 100%;
   text-align: left;
-  position: relative;
-  padding-top: 1.5%;
-  padding-bottom: 1.5%;
+  padding-top: 1%;
+  padding-bottom: 1%;
 }
 
-.sudoNotify > .wrapper > .icon {
+.sn > .sn-wrapper > .sn-icon {
   line-height: inherit;
   float: left;
   margin: 0 15px 0 10px;
 }
 
-.sudoNotify > .wrapper > .message {
+.sn > .sn-wrapper > .sn-message {
   float: left;
 }
 
-.sudoNotify > .wrapper > .close-button {
+.sn > .sn-wrapper > .sn-close-button {
   float: right;
   cursor: pointer;
   line-height: inherit;

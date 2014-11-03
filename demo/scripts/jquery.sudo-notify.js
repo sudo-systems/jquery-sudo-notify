@@ -30,22 +30,31 @@ String.prototype.isIn = function() {
       elementShowSpeed = parseInt(settings.animation.showSpeed);
       elementHideSpeed = parseInt(settings.animation.hideSpeed);
       wrapperFadeSpeed = (elementShowSpeed/3);
-      cssPosition = parentElement.is('body')? 'fixed' : 'absolute';
+      cssPosition = parentElement.is('body')? 'fixed' : settings.positionType;
       iconContainer = $('<div></div>')
-        .addClass('icon fa clearfix')
+        .addClass('sn-icon fa')
         .css('fontSize', settings.defaultStyle.fontSize);
       messageContainer = $('<div></div>')
-        .addClass('message clearfix');
+        .addClass('sn-message');
       closeButtonContainer = $('<div></div>')
-        .addClass('close-button fa fa-times clearfix');
+        .addClass('sn-close-button fa fa-times');
       wrapper = $('<div></div>')
-        .addClass('wrapper clearfix')
+        .addClass('sn-wrapper')
         .css(settings.defaultStyle)
         .append(iconContainer, messageContainer, closeButtonContainer);
       element
-        .addClass('sudoNotify clearfix')
+        .addClass('sn')
         .css('position', cssPosition)
         .append(wrapper);
+
+      if(settings.position === 'bottom') {
+        element.css('borderBottomRadius', 'inherit');
+        bottomCss.bottom = settings.verticalMargin;
+      }
+      else {
+        element.css('borderTopRadius', 'inherit');
+        topCss.top = settings.verticalMargin;
+      }
 
       if(!parentElement.is('body')) {
         if(parentElement.css('position').isIn('', 'static')){
@@ -372,6 +381,8 @@ String.prototype.isIn = function() {
     showCloseButton: true,
     duration: 5, //seconds
     position: 'top', //top or bottom
+    positionType: 'absolute',
+    verticalMargin: '0px',
     log: true,
     opacity: 0.95,
     defaultStyle: {
