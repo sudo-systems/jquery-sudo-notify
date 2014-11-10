@@ -12,245 +12,247 @@ String.prototype.isIn = function() {
   return false;
 };
 
-(function($) {
-  $.fn.sudoNotify = function(options) {
-    var settings = $.extend(true, {}, $.fn.sudoNotify.defaults, options);
-    var topCss = {top:0, bottom:''};
-    var bottomCss = {bottom:0, top:''};
-    var timer = null;
-    var element = this;
-    var currentMessageType = '';
-    var wrapperFadeSpeed, elementShowSpeed, elementHideSpeed, cssPosition, iconContainer, messageContainer, closeButtonContainer, wrapper, parentElement;
+(function( $ ){
+  var privateMethods = {
+    //Helper methods
+    getDateTime: function() {
+      var now     = new Date();
+      var year    = now.getFullYear();
+      var month   = now.getMonth()+1;
+      var day     = now.getDate();
+      var hour    = now.getHours();
+      var minute  = now.getMinutes();
+      var second  = now.getSeconds();
 
-    init();
+      month = (month.toString().length === 1)? month = '0'+month : month;
+      day = (day.toString().length === 1)? day = '0'+day : day;
+      hour = (hour.toString().length === 1)? hour = '0'+hour : hour;
+      minute = (minute.toString().length === 1)? minute = '0'+minute : minute;
+      second = (second.toString().length === 1)? second = '0'+second : second;
 
-    //Private methods
-    function init() {
-      parentElement = element.parent();
-      elementShowSpeed = parseInt(settings.animation.showSpeed);
-      elementHideSpeed = parseInt(settings.animation.hideSpeed);
-      wrapperFadeSpeed = (elementShowSpeed/3);
-      cssPosition = parentElement.is('body')? 'fixed' : settings.positionType;
-      iconContainer = $('<div></div>')
-        .addClass('sn-icon fa')
-        .css('fontSize', settings.defaultStyle.fontSize);
-      messageContainer = $('<div></div>')
-        .addClass('sn-message');
-      closeButtonContainer = $('<div></div>')
-        .addClass('sn-close-button fa fa-times');
-      wrapper = $('<div></div>')
-        .addClass('sn-wrapper')
-        .css(settings.defaultStyle)
-        .append(iconContainer, messageContainer, closeButtonContainer);
-      element
-        .addClass('sn')
-        .css('position', cssPosition)
-        .append(wrapper);
-
-      if(settings.position === 'bottom') {
-        element.css('borderBottomRadius', 'inherit');
-        bottomCss.bottom = settings.verticalMargin;
+      return day+'-'+month+'-'+year+' '+hour+':'+minute+':'+second;
+    },
+    debug: function(messageType, data) {
+      if(window.console && window.console.log) {
+        window.console.log(privateMethods.getDateTime.call(self)+' ~ ' +messageType+ ': "' +data+ '"');
       }
-      else {
-        element.css('borderTopRadius', 'inherit');
-        topCss.top = settings.verticalMargin;
-      }
+    },
+    setIcon: function(messageType) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
 
-      if(!parentElement.is('body')) {
-        if(parentElement.css('position').isIn('', 'static')){
-          parentElement.css('position', 'relative');
-        }
-
-        if(parentElement.css('overflow').isIn('', 'visible')){
-          parentElement.css('overflow', 'hidden');
-        }
-      }
-    }
-
-    function setIcon(messageType) {
       if(messageType === 'success'){
-        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-check');
+        data.iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-check');
       }
       else if(messageType === 'warning'){
-        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-exclamation-triangle');
+        data.iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-exclamation-triangle');
       }
       else if(messageType === 'error'){
-        iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-ban');
+        data.iconContainer.removeClass('fa-check fa-exclamation-triangle fa-ban').addClass('fa-ban');
       }
-    }
-    
-    function show(messageType, message) {
-      var positionCss = (settings.position === 'bottom')? bottomCss : topCss;
-      element.css(positionCss).css('opacity', settings.opacity);
-      closeButtonContainer.toggle(settings.showCloseButton);
+    },
+    show: function(messageType, message) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      var positionCss = (settings.position === 'bottom')? data.bottomCss : data.topCss;
+      self.css(positionCss).css('opacity', settings.opacity);
+      data.closeButtonContainer.toggle(settings.showCloseButton);
         
-      if(element.is(':visible') && settings.animation.type !== 'none') {
-        executeHide(function() {
-          currentMessageType = messageType;
-          executeShow(messageType, message, function() {
-            initDelayedHide();
-          });
+      if(self.is(':visible') && settings.animation.type !== 'none') {
+        privateMethods.executeHide.call(self, function() {
+          data.currentMessageType = messageType;
+          privateMethods.executeShow.apply(self, [messageType, message, function() {
+            privateMethods.initDelayedHide.call(self);
+          }]);
         });
       }
       else {
-        currentMessageType = messageType;
-        executeShow(messageType, message, function() {
-          initDelayedHide();
-        });
+        data.currentMessageType = messageType;
+        privateMethods.executeShow.apply(self, [messageType, message, function() {
+          privateMethods.initDelayedHide.call(self);
+        }]);
       }
-    }
-    
-    function executeShow(messageType, message, callback) {
+    },
+    executeShow: function(messageType, message, callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
-      clearTimeout(timer);
-      element.css(settings[messageType+'Style']);
-      messageContainer.html(message);
-      closeButtonContainer.css('color', settings[messageType+'Style'].color);
-      setIcon(messageType);
+      clearTimeout(data.timer);
+      self.css(settings[messageType+'Style']);
+      data.messageContainer.html(message);
+      data.closeButtonContainer.css('color', settings[messageType+'Style'].color);
+      privateMethods.setIcon.call(self, messageType);
       
       if(settings.animation.type === 'expand') {
-        expandIn(callback);
+        privateMethods.expandIn.call(self, callback);
       }
       else if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
-        scrollIn(callback);
+        privateMethods.scrollIn.call(self, callback);
       }
       else if(settings.animation.type.isIn('slide', 'slide-fade') ) {
-        slideIn(callback);
+        privateMethods.slideIn.call(self, callback);
       }
       else if(settings.animation.type === 'fade') {
-        fadeIn(callback);
+        privateMethods.fadeIn.call(self, callback);
       }
       else {
-        simpleShow(callback);
+        privateMethods.simpleShow.call(self, callback);
       }
 
       if(settings.log === true) {
-        debug(messageType, message);
+        privateMethods.debug.apply(self, [messageType, message]);
       }
-    }
-    
-    function executeHide(callback) {
+    }, 
+    executeHide: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
       callback = (callback === 'undefined' || typeof callback !== 'function')? function(){} : callback;
-      clearTimeout(timer);
+      clearTimeout(data.timer);
       
       if(settings.animation.type === 'expand') {
-        expandOut(callback);
+        privateMethods.expandOut.call(self, callback);
       }
       else if(settings.animation.type.isIn('scroll-right', 'scroll-left', 'scroll-right-fade', 'scroll-left-fade')) {
-        scrollOut(callback);
+        privateMethods.scrollOut.call(self, callback);
       }
       else if(settings.animation.type.isIn('slide', 'slide-fade')) {
-        slideOut(callback);
+        privateMethods.slideOut.call(self, callback);
       }
       else if(settings.animation.type === 'fade') {
-        fadeOut(callback);
+        privateMethods.fadeOut.call(self, callback);
       }
       else {
-        simpleHide(callback);
+        privateMethods.simpleHide.call(self, callback);
       }
-    }
-    
-    function initDelayedHide() {
+    },
+    initDelayedHide: function() {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
       if(settings.autoHide === true) {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-          executeHide();
-        }, (parseInt(settings.duration)*1000));
+        clearTimeout(data.timer);
+        data.timer = setTimeout(function() {
+          privateMethods.executeHide.call(self);
+        }, settings.duration * 1000);
       }
-    }
+    },
     
     //Animations
-    function expandIn(callback) {
-      var initialPosition = (parentElement.width()/2)+'px';
+    expandIn: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      var initialPosition = (data.parentElement.width()/2)+'px';
       var targetPostion = '0px';
       
-      wrapper.css('whiteSpace', 'nowrap').css('opacity', 0.0);
-      element.css('width', '0%').css('left', initialPosition).show();
+      data.wrapper.css('whiteSpace', 'nowrap').css('opacity', 0.0);
+      self.css('width', '0%').css('left', initialPosition).show();
       
       var animationOptions = {
         left: targetPostion,
         width: '100%'
       };
 
-      element.stop().animate(animationOptions, elementShowSpeed, 
+      self.stop().animate(animationOptions,settings.animation.selfShowSpeed, 
         function() {
-          settings.onShow(currentMessageType);
+          settings.onShow(data.currentMessageType);
           callback();
-          wrapper.stop().css('whiteSpace', 'normal').animate({opacity:1.0}, wrapperFadeSpeed);
+          data.wrapper.stop().css('whiteSpace', 'normal').animate({opacity:1.0}, data.wrapperFadeSpeed);
         }
       );
-    }
-    
-    function expandOut(callback) {
-      var targetPosition = (parentElement.width()/2)+'px';
+    },
+    expandOut: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      var targetPosition = (data.parentElement.width()/2)+'px';
       var animationOptions = {
         left: targetPosition,
         width: '0%'
       };
 
-      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed, function() {
+      data.wrapper.stop().animate({opacity:0.0}, data.wrapperFadeSpeed, function() {
         $(this).hide();
       });
       
-      element.stop().animate(animationOptions, elementHideSpeed, 
+     self.stop().animate(animationOptions,settings.animation.selfHideSpeed, 
         function(){
-          element.hide();
-          wrapper.show();
-          settings.onClose(currentMessageType);
+         self.hide();
+          data.wrapper.show();
+          settings.onClose(data.currentMessageType);
           callback();
         }
       );
-    }
-    
-    function scrollIn(callback) {
-      var initialPosition = settings.animation.type.isIn('scroll-right', 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
+    },
+    scrollIn: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      var initialPosition = settings.animation.type.isIn('scroll-right', 'scroll-right-fade')? '-'+self.width()+'px' :self.width()+'px';
         
       if(settings.animation.type.isIn('scroll-right-fade', 'scroll-left-fade')) {
-        element.css('opacity', 0.0);
+       self.css('opacity', 0.0);
       }
 
-      wrapper.css('opacity', 0.0);
-      element.css('left', initialPosition).show();
+      data.wrapper.css('opacity', 0.0);
+      self.css('left', initialPosition).show();
       var animationOptions = {left: '0px'};
 
       if(settings.animation.type.isIn('scroll-right-fade', 'scroll-left-fade')) {
         animationOptions.opacity= settings.opacity;
       }
 
-      element.stop().animate(animationOptions, elementShowSpeed, 
+      self.stop().animate(animationOptions,settings.animation.selfShowSpeed, 
         function() {
-          settings.onShow(currentMessageType);
+          settings.onShow(data.currentMessageType);
           callback();
-          wrapper.stop().animate({opacity:1.0}, wrapperFadeSpeed);
+          data.wrapper.stop().animate({opacity:1.0}, data.wrapperFadeSpeed);
         }
       );
-    }
-    
-    function scrollOut(callback) {
-      var targetPosition = settings.animation.type.isIn('scroll-right', 'scroll-right-fade')? '-'+element.width()+'px' : element.width()+'px';
+    },
+    scrollOut: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      var targetPosition = settings.animation.type.isIn('scroll-right', 'scroll-right-fade')? '-'+self.width()+'px' :self.width()+'px';
       var animationOptions = {left: targetPosition};
 
       if(settings.animation.type.isIn('scroll-right-fade', 'scroll-left-fade')) {
         animationOptions.opacity= 0.0;
       }
       
-      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed);
-      element.stop().animate(animationOptions, elementHideSpeed, 
+      data.wrapper.stop().animate({opacity:0.0}, data.wrapperFadeSpeed);
+      self.stop().animate(animationOptions,settings.animation.selfHideSpeed, 
         function(){
-          element.hide();
-          settings.onClose(currentMessageType);
+         self.hide();
+          settings.onClose(data.currentMessageType);
           callback();
         }
       );
-    }
-    
-    function slideIn(callback) {
+    },
+    slideIn: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
       if(settings.animation.type === 'slide-fade') {
-        element.css('opacity', 0.0);
+        self.css('opacity', 0.0);
       }
 
-      wrapper.css('opacity', 0.0);
-      element.css(settings.position, '-'+element.height()).show();
+      data.wrapper.css('opacity', 0.0);
+      self.css(settings.position, '-'+self.height()).show();
 
       var animationOptions = {};
       animationOptions[settings.position] = '0px';
@@ -259,123 +261,190 @@ String.prototype.isIn = function() {
         animationOptions['opacity'] = settings.opacity;
       }
 
-      element.stop().animate(animationOptions, elementShowSpeed, 
+      self.stop().animate(animationOptions,settings.animation.selfShowSpeed, 
         function() {
-          settings.onShow(currentMessageType);
+          settings.onShow(data.currentMessageType);
           callback();
-          wrapper.stop().animate({opacity:1.0}, wrapperFadeSpeed);
+          data.wrapper.stop().animate({opacity:1.0}, data.wrapperFadeSpeed);
         }
       );
-    }
-    
-    function slideOut(callback) {
+    },
+    slideOut: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
       var animationOptions = {};
-      animationOptions[settings.position] = '-'+element.height();
+      animationOptions[settings.position] = '-'+self.height();
 
       if(settings.animation.type === 'slide-fade') {
         animationOptions['opacity'] = 0.0;
       }
 
-      wrapper.stop().animate({opacity:0.0}, wrapperFadeSpeed);
-      element.stop().animate(animationOptions, elementHideSpeed, 
+      data.wrapper.stop().animate({opacity:0.0}, data.wrapperFadeSpeed);
+      self.stop().animate(animationOptions,settings.animation.selfHideSpeed, 
         function(){
-          element.hide();
-          settings.onClose(currentMessageType);
+         self.hide();
+          settings.onClose(data.currentMessageType);
           callback();
         }
       );
-    }
-    
-    function fadeIn(callback) {
-      element.fadeIn(elementShowSpeed, 
+    },
+    fadeIn: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      self.fadeIn(settings.animation.showSpeed, 
         function() {
-          settings.onShow(currentMessageType);
+          settings.onShow(data.currentMessageType);
           callback();
         }
       );
-    }
-    
-    function fadeOut(callback) {
-      element.fadeOut(elementHideSpeed,
+    },
+    fadeOut: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      self.fadeOut(settings.animation.hideSpeed,
         function() {
-          settings.onClose(currentMessageType);
+          settings.onClose(data.currentMessageType);
           callback();
-          currentMessageType = '';
+          data.currentMessageType = '';
         }
       );
-    }
-    
-    function simpleShow(callback) {
-      element.show();
+    }, 
+    simpleShow: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      self.show();
       callback();
-      settings.onShow(currentMessageType);
-    }
-    
-    function simpleHide(callback) {
-      element.hide();
+      settings.onShow(data.currentMessageType);
+    },
+    simpleHide: function(callback) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings;
+
+      self.hide();
       callback();
-      settings.onClose(currentMessageType);
-      currentMessageType = '';
+      settings.onClose(data.currentMessageType);
+      data.currentMessageType = '';
     }
-    
-    closeButtonContainer.on('click', function(e) {
-      e.preventDefault();
-      executeHide();
-    });
-    
-    //Helper methods
-    function getDateTime() {
-      var now     = new Date(); 
-      var year    = now.getFullYear();
-      var month   = now.getMonth()+1; 
-      var day     = now.getDate();
-      var hour    = now.getHours();
-      var minute  = now.getMinutes();
-      var second  = now.getSeconds(); 
-      
-      month = (month.toString().length === 1)? month = '0'+month : month;
-      day = (day.toString().length === 1)? day = '0'+day : day;
-      hour = (hour.toString().length === 1)? hour = '0'+hour : hour;
-      minute = (minute.toString().length === 1)? minute = '0'+minute : minute;
-      second = (second.toString().length === 1)? second = '0'+second : second;
-
-      return day+'-'+month+'-'+year+' '+hour+':'+minute+':'+second;
-  }
-
-    function debug(messageType, data) {
-      if(window.console && window.console.log) {
-        window.console.log(getDateTime()+' ~ ' +messageType+ ': "' +data+ '"');
-      }
-    };
-
-    //Public methods
-    this.error = function(message) {
-      show('error', message);
-    };
-    
-    this.warning = function(message) {
-      show('warning', message);
-    };
-    
-    this.success = function(message) {
-      show('success', message);
-    };
-    
-    this.setOption = function(key, value) {
-      settings[key] = value;
-    };
-    
-    this.getOption = function(key) {
-      return settings[key];
-    };
-    
-    this.close = function() {
-      executeHide();
-    };
-
-    return this;
   };
-  
+
+  var methods = {
+    init: function( options ) {
+      return this.each(function(){
+        var self = $(this);
+        var data = self.data("sudoNotify");
+
+        // If the plugin hasn't been initialized yet
+        if (! data) {
+          var settings = $.extend(true, {}, $.fn.sudoNotify.defaults, options);
+          self.data("sudoNotify", {
+            settings: settings,
+            topCss: {
+              top: 0, 
+              bottom:''
+            },
+            bottomCss: {
+              bottom: 0, 
+              top:''
+            },
+            timer:                null,
+            currentMessageType:   '',
+            wrapperFadeSpeed:     null, 
+            cssPosition:          null, 
+            parentElement:        null,
+            iconContainer:        $('<div class="sn-icon fa" style="font-size: '+settings.defaultStyle.fontSize+'"></div>'),
+            messageContainer:     $('<div class="sn-message"></div>'),
+            closeButtonContainer: $('<div class="sn-close-button fa fa-times"></div>'),
+            wrapper:              $('<div class="sn-wrapper"></div>')
+          });
+          var data = self.data("sudoNotify");
+          var settings = data.settings;
+
+          data.parentElement = self.parent();
+          data.wrapperFadeSpeed = (settings.animation.showSpeed/3);
+
+
+          self.addClass('sn')
+              .css('position', data.parentElement.is('body') ? 'fixed' : settings.positionType)
+              .append(data.wrapper);
+
+          data.wrapper
+              .css(settings.defaultStyle)
+              .append(data.iconContainer, data.messageContainer, data.closeButtonContainer);
+
+          if(settings.position === 'bottom') {
+            self.css('borderBottomRadius', 'inherit');
+            data.bottomCss.bottom = settings.verticalMargin;
+          } else {
+            self.css('borderTopRadius', 'inherit');
+            data.topCss.top = settings.verticalMargin;
+          }
+
+          if(!data.parentElement.is('body')) {
+            if(data.parentElement.css('position').isIn('', 'static')){
+              data.parentElement.css('position', 'relative');
+            }
+
+            if(data.parentElement.css('overflow').isIn('', 'visible')){
+              data.parentElement.css('overflow', 'hidden');
+            }
+          }
+
+          data.closeButtonContainer.on('click', function(e) {
+            e.preventDefault();
+            executeHide();
+          });
+        }
+      });
+    },
+    error: function(message) {
+      var self = this;
+      privateMethods.show.apply(self, ['error', message]);
+    },
+    warning: function(message) {
+      var self = this;
+      privateMethods.show.apply(self, ['warning', message]);
+    },
+    success: function(message) {
+      var self = this;
+      privateMethods.show.apply(self, ['success', message]);
+    },
+    setOption: function(key, value) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings; 
+
+      settings[key] = value;
+    },
+    getOption: function(key) {
+      var self = this;
+      var data = self.data("sudoNotify");
+      var settings = data.settings; 
+
+      return settings[key];
+    },
+    close: function() {
+      var self = this;
+      privateMethods.executeHide.call(self);
+    }
+  };
+  $.fn.sudoNotify = function(method, options) {
+    if (methods[method]) {
+      return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+    } else if ( typeof method === 'object' || ! method ) {
+      return methods.init.apply( this, arguments );
+    } else {
+      $.error( 'Method ' +  method + ' does not exist on jQuery.sudoNotify' );
+    }
+  };
   $.fn.sudoNotify.defaults = {
     autoHide: true,
     showCloseButton: true,
@@ -409,4 +478,6 @@ String.prototype.isIn = function() {
     onClose: function() {},
     onShow: function() {}
   };
-}(jQuery));
+
+})( jQuery );
+
